@@ -1,0 +1,13 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cloud background -->
+  <path d="M60 100c0-13.25 10.75-24 24-24 6.5 0 12.25 2.5 16.5 6.5C107.5 72 120 80.5 120 95c0 13.75-10.75 25-24 25H64c-13.25 0-24-10.75-24-24z" fill="#87CEEB" />
+  
+  <!-- File overlay with slight transparency -->
+  <rect x="75" y="75" width="40" height="60" rx="5" ry="5" fill="white" opacity="0.8" />
+  <rect x="75" y="75" width="40" height="15" rx="5" ry="5" fill="#DCE6F0" opacity="0.8" />
+
+  <!-- Text below the cloud -->
+  <text x="100" y="150" font-family="Arial, sans-serif" font-size="20" fill="#4A90E2" text-anchor="middle">
+    Filestream
+  </text>
+</svg>
