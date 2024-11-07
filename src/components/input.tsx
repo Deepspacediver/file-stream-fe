@@ -24,9 +24,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         {label}:
       </label>
       <input
-        className={clsx(
-          "peer w-full px-1 focus:outline-none bg-transparent random"
-        )}
+        className={clsx("peer w-full px-1 focus:outline-none bg-transparent")}
         name={name}
         id={name}
         {...rest}
