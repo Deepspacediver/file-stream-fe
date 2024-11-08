@@ -9,6 +9,7 @@ import {
   CONTAINS_UPPER_CASE_REGEX,
 } from "@/constants/regex";
 import Button from "@/components/button";
+import { useRegisterUser } from "@/api/queries/users-queries";
 
 const PasswordSchema = z.coerce
   .string({
@@ -61,10 +62,14 @@ export default function RegisterPage() {
     },
   });
 
+  const { createUser } = useRegisterUser();
+
   const onSubmit = (data: RegisterSchemaType, e?: BaseSyntheticEvent) => {
     e?.preventDefault();
     console.log(data);
+    createUser({ username: data.username, password: data.password });
   };
+
   return (
     <div className="shadow-2xl rounded-md p-8 w-10/12 max-w-xl mx-auto text-white bg-col-white-transparent">
       <h2 className="text-3xl mb-6 font-medium">Create an account</h2>
