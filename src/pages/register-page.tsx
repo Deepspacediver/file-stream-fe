@@ -10,6 +10,7 @@ import {
 } from "@/constants/regex";
 import Button from "@/components/button";
 import { useRegisterUser } from "@/api/queries/users-queries";
+import CustomNavlink from "@/components/custom-navlink";
 
 const PasswordSchema = z.coerce
   .string({
@@ -94,6 +95,9 @@ export default function RegisterPage() {
           {...register("confirmPassword")}
           error={errors["confirmPassword"]}
         />
+        <p className="text-xl">
+          Already a user? <CustomNavlink to={"/login"}>Login</CustomNavlink>
+        </p>
         <Button>Submit</Button>
       </form>
     </div>
