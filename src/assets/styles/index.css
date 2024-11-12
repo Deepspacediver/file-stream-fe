@@ -1,3 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --col-white: #ffffff;
+  }
+  #root,
+  html,
+  body {
+    @apply h-full;
+  }
+  html {
+    @apply bg-col-white;
+    font-family: "Rubik", sans-serif;
+  }
+}
+
+@layer components {
+  .input-underline {
+    @apply relative inline-block h-1 rounded bg-col-white scale-y-100 peer-focus:scale-y-150 transition-transform;
+  }
+
+  input:is(:-webkit-autofill, :autofill) {
+    @apply bg-transparent;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: var(--col-white);
+  }
+}
