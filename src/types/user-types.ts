@@ -5,3 +5,6 @@ export type User = {
 };
 
 export type CreateUser = Omit<User, "userId">;
+
+export type LoginRequest = Omit<User, "userId">;
+export type UserWithoutPassword = Omit<User, "password">;
