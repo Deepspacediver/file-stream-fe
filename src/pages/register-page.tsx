@@ -7,6 +7,7 @@ import {
   CONTAINS_LOWER_CASE_REGEX,
   CONTAINS_NUMBER_REGEX,
   CONTAINS_UPPER_CASE_REGEX,
+  CONTAINS_WHITE_SPACE_REGEX,
 } from "@/constants/regex";
 import Button from "@/components/button";
 import { useRegisterUser } from "@/api/queries/users-queries";
@@ -22,17 +23,20 @@ const PasswordSchema = z.coerce
     CONTAINS_UPPER_CASE_REGEX,
     "Password must contain an upper case letter"
   )
-  .regex(
-    CONTAINS_LOWER_CASE_REGEX,
-    "Password must contain a lower case letter"
-  );
+  .regex(CONTAINS_LOWER_CASE_REGEX, "Password must contain a lower case letter")
+  .regex(CONTAINS_WHITE_SPACE_REGEX, {
+    message: "Password cannot contain spaces",
+  });
 
 const RegisterSchema = z
   .object({
     username: z
       .string({ message: "Username is required" })
       .min(5, { message: "Username must be at least 5 characters long" })
-      .max(20, { message: "Username cannot be longer than 20 characters" }),
+      .max(20, { message: "Username cannot be longer than 20 characters" })
+      .regex(CONTAINS_WHITE_SPACE_REGEX, {
+        message: "Username cannot contain spaces",
+      }),
     password: PasswordSchema,
     confirmPassword: z.string(),
   })
