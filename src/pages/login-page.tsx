@@ -2,12 +2,11 @@ import Input from "@/components/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BaseSyntheticEvent, useContext } from "react";
+import { BaseSyntheticEvent } from "react";
 import Button from "@/components/button";
 import CustomNavlink from "@/components/custom-navlink";
 import { useLogin } from "@/api/queries/auth-queries";
 import { CONTAINS_WHITE_SPACE_REGEX } from "@/constants/regex";
-import { UserContext } from "@/contexts/user-context";
 
 const LoginSchema = z.object({
   username: z
@@ -26,9 +25,6 @@ const LoginSchema = z.object({
 type LoginSchemaType = z.infer<typeof LoginSchema>;
 
 export default function LoginPage() {
-  const { user } = useContext(UserContext);
-  console.log({ user });
-
   const {
     handleSubmit,
     formState: { errors },

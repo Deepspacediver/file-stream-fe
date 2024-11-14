@@ -71,7 +71,6 @@ export default function RegisterPage() {
 
   const onSubmit = (data: RegisterSchemaType, e?: BaseSyntheticEvent) => {
     e?.preventDefault();
-    console.log(data);
     createUser({ username: data.username, password: data.password });
   };
 
