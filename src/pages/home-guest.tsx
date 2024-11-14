@@ -2,7 +2,7 @@ import CustomNavlink from "@/components/custom-navlink";
 
 export default function HomeGuest() {
   return (
-    <div className="flex gap-6 w-5/6 max-w-7xl mx-auto flex-col text-col-white md:flex-row md:mt-16">
+    <div className="flex gap-6 w-5/6 max-w-4xl mx-auto flex-col text-col-white md:flex-row md:mt-16">
       <div className="flex flex-col gap-3 md:basis-1/2">
         <h2 className="text-6xl font-medium">Welcome to FileStream!</h2>
         <p className="text-3xl font-semibold">
