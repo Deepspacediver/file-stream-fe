@@ -6,16 +6,24 @@ type CustomNavlinkProps = {
   className?: string;
   children: ReactNode;
   to: string;
+  isButton?: boolean;
 };
 
 export default function CustomNavlink({
   children,
   to,
   className,
+  isButton,
 }: CustomNavlinkProps) {
+  const buttonStyles =
+    "w-fit min-w-32 text-center magnify rounded-2xl no-underline bg-col-white text-col-black p-2";
   return (
     <NavLink
-      className={clsx("font-medium underline", className && className)}
+      className={clsx(
+        "underline",
+        isButton && buttonStyles,
+        className && className
+      )}
       to={to}
     >
       {children}
