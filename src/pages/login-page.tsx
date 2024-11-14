@@ -46,7 +46,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="shadow-2xl rounded-md p-8 w-10/12 max-w-xl mx-auto text-white bg-col-white-transparent">
+    <div className="transparent-background w-10/12 max-w-xl mx-auto ">
       <h2 className="text-3xl mb-6 font-medium">Log in</h2>
       <form
         onSubmit={handleSubmit(onSubmit)}

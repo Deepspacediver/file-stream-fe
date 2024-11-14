@@ -1,4 +1,5 @@
 import logoSrc from "@/assets/icons/file-stream-logo.webp";
+import CustomNavlink from "./custom-navlink";
 
 export default function Header() {
   return (
@@ -6,7 +7,9 @@ export default function Header() {
       <div>
         <img className="w-10" src={logoSrc} alt="file stream folder" />
       </div>
-      <h1 className="text-4xl font-medium text-col-white">FileStream</h1>
+      <CustomNavlink to="/" className="no-underline">
+        <h1 className="text-4xl font-medium text-col-white">FileStream</h1>
+      </CustomNavlink>
     </header>
   );
 }
