@@ -1,5 +1,6 @@
 import HomeGuest from "@/pages/home-guest";
 import Layout from "@/pages/layout";
+import LoginPage from "@/pages/login-page";
 import RegisterPage from "@/pages/register-page";
 import { ReactElement } from "react";
 
@@ -18,6 +19,10 @@ export const routes: Route[] = [
       {
         path: "/register",
         element: <RegisterPage />,
+      },
+      {
+        path: "/login",
+        element: <LoginPage />,
       },
     ],
   },
