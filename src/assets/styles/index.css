@@ -28,4 +28,12 @@
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: var(--col-white);
   }
+
+  .transparent-background {
+    @apply shadow-2xl rounded-md p-8 text-white bg-col-white-transparent;
+  }
+
+  .magnify {
+    @apply scale-95 hover:scale-100 transition-transform;
+  }
 }
