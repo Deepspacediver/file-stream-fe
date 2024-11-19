@@ -1,10 +1,9 @@
 import Header from "@/components/header";
-import clsx from "clsx";
 import { Outlet } from "react-router-dom";
 
-export default function Layout() {
+export default function GuestLayout() {
   return (
-    <div className={clsx("bg-gradient-vertical h-full  min-h-fit")}>
+    <div className="h-full  min-h-fit bg-gradient-vertical">
       <Header />
       <Outlet />
     </div>

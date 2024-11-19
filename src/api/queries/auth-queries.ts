@@ -3,10 +3,12 @@ import { getLoggedUserData, login } from "../services/auth-services";
 import { setIsLogged } from "@/helpers/local-storage-helpers";
 import { useContext } from "react";
 import { UserContext } from "@/contexts/user-context";
+import { useNavigate } from "react-router-dom";
 
 const BASE_KEY = "auth";
 
 export const useLogin = () => {
+  const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
   const queryClient = useQueryClient();
   const { mutate: loginUser } = useMutation({
@@ -15,6 +17,7 @@ export const useLogin = () => {
       setIsLogged();
       setUser(user);
       queryClient.invalidateQueries({ queryKey: [BASE_KEY] });
+      navigate("/");
     },
   });
 

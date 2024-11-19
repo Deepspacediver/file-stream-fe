@@ -1,5 +1,5 @@
-import HomeGuest from "@/pages/home-guest";
-import Layout from "@/pages/layout";
+import HomeView from "@/views/home-view";
+import Layout from "@/views/layout";
 import LoginPage from "@/pages/login-page";
 import RegisterPage from "@/pages/register-page";
 import { ReactElement } from "react";
@@ -15,7 +15,7 @@ export const routes: Route[] = [
     path: "/",
     element: <Layout />,
     children: [
-      { path: "/", element: <HomeGuest /> },
+      { path: "/", element: <HomeView /> },
       {
         path: "/register",
         element: <RegisterPage />,
