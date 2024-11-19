@@ -7,6 +7,7 @@ export default {
         "col-white": "#FFFFFF",
         "col-white-transparent": "rgba(240, 240, 240, .25)",
         "col-purple": "#53118F",
+        "col-purple-light": "#4c26ea",
         "col-black": "#000000",
         "col-error": "#FFA07A",
       },
