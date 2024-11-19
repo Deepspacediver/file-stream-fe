@@ -2,11 +2,13 @@ import Input from "@/components/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BaseSyntheticEvent } from "react";
+import { BaseSyntheticEvent, useContext, useEffect } from "react";
 import Button from "@/components/button";
 import CustomNavlink from "@/components/custom-navlink";
 import { useLogin } from "@/api/queries/auth-queries";
 import { CONTAINS_WHITE_SPACE_REGEX } from "@/constants/regex";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "@/contexts/user-context";
 
 const LoginSchema = z.object({
   username: z
@@ -25,6 +27,15 @@ const LoginSchema = z.object({
 type LoginSchemaType = z.infer<typeof LoginSchema>;
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, []);
+
   const {
     handleSubmit,
     formState: { errors },
@@ -67,7 +78,7 @@ export default function LoginPage() {
           Don't have an account?{" "}
           <CustomNavlink to={"/register"}>Create an account</CustomNavlink>
         </p>
-        <Button>Submit</Button>
+        <Button className="mx-auto">Submit</Button>
       </form>
     </div>
   );

@@ -2,7 +2,7 @@ import Input from "@/components/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BaseSyntheticEvent } from "react";
+import { BaseSyntheticEvent, useContext, useEffect } from "react";
 import {
   CONTAINS_LOWER_CASE_REGEX,
   CONTAINS_NUMBER_REGEX,
@@ -12,6 +12,8 @@ import {
 import Button from "@/components/button";
 import { useRegisterUser } from "@/api/queries/users-queries";
 import CustomNavlink from "@/components/custom-navlink";
+import { UserContext } from "@/contexts/user-context";
+import { useNavigate } from "react-router-dom";
 
 const PasswordSchema = z.coerce
   .string({
@@ -53,6 +55,15 @@ const RegisterSchema = z
 type RegisterSchemaType = z.infer<typeof RegisterSchema>;
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, []);
+
   const {
     handleSubmit,
     formState: { errors },
@@ -101,7 +112,7 @@ export default function RegisterPage() {
         <p className="text-xl">
           Already a user? <CustomNavlink to={"/login"}>Login</CustomNavlink>
         </p>
-        <Button>Submit</Button>
+        <Button className="mx-auto">Submit</Button>
       </form>
     </div>
   );
