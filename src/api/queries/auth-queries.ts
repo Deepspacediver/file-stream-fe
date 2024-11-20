@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getLoggedUserData, login } from "../services/auth-services";
-import { setIsLogged } from "@/helpers/local-storage-helpers";
+import {
+  getLoggedUserData,
+  login,
+  logoutUser,
+} from "../services/auth-services";
+import { clearIsLogged, setIsLogged } from "@/helpers/local-storage-helpers";
 import { useContext } from "react";
 import { UserContext } from "@/contexts/user-context";
 import { useNavigate } from "react-router-dom";
@@ -36,4 +40,19 @@ export const useGetLoggedUserData = (isDisabled?: boolean) => {
     user,
     isLoading,
   };
+};
+
+export const useLogoutUser = () => {
+  const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
+  const { mutate: logout, isPending: isLoading } = useMutation({
+    mutationFn: logoutUser,
+    onSuccess: () => {
+      clearIsLogged();
+      setUser(null);
+      navigate("/");
+    },
+  });
+
+  return { logout, isLoading };
 };

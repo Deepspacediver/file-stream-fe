@@ -5,6 +5,7 @@ enum AuthRoutes {
   AUTH = "/auth",
   LOGIN = "/auth/login",
   ME = "/auth/me",
+  LOGOUT = "/auth/logout",
 }
 
 export const login = async ({ username, password }: LoginRequest) => {
@@ -21,4 +22,8 @@ export const login = async ({ username, password }: LoginRequest) => {
 export const getLoggedUserData = async () => {
   const { data } = await axiosClient.get<UserWithoutPassword>(AuthRoutes.ME);
   return data;
+};
+
+export const logoutUser = async () => {
+  await axiosClient.post(AuthRoutes.LOGOUT);
 };
