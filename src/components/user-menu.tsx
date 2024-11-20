@@ -5,11 +5,12 @@ import DropdownIcon from "@/assets/icons/chevron-down.svg?react";
 import LogoutIcon from "@/assets/icons/logout-icon.svg?react";
 import clsx from "clsx";
 import Button from "./button";
+import { useLogoutUser } from "@/api/queries/auth-queries";
 
 export default function UserMenu() {
   const { user } = useContext(UserContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const { logout } = useLogoutUser();
   return (
     <div className="flex items-center p-1 gap-3 border-l-2 relative">
       <h2 className="text-col-purple font-medium text-base ">
@@ -35,7 +36,12 @@ export default function UserMenu() {
       >
         <ul>
           <li>
-            <Button className="min-w-fit p-0 flex items-center gap-2">
+            <Button
+              className="min-w-fit p-0 flex items-center gap-2"
+              onClick={() => {
+                logout();
+              }}
+            >
               <LogoutIcon className="w-8 h-8" />
               Logout
             </Button>
