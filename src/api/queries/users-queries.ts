@@ -1,5 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUserFolders, registerUser } from "../services/users-services";
+import {
+  createFolder,
+  getUserFolders,
+  registerUser,
+} from "../services/users-services";
 import { useNavigate } from "react-router-dom";
 import { setIsLogged } from "@/helpers/local-storage-helpers";
 import { useContext } from "react";
@@ -33,4 +37,16 @@ export const useGetUserFolders = (userId?: number, isDisabled?: boolean) => {
   });
 
   return { folders, isLoading };
+};
+
+export const useCreateFolder = (userId: number) => {
+  const queryClient = useQueryClient();
+  const { mutate: createNewFolder, isPending: isLoading } = useMutation({
+    mutationFn: createFolder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [FOLDERS_KEY, userId] });
+    },
+  });
+
+  return { createNewFolder, isLoading };
 };

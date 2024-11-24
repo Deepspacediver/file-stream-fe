@@ -7,7 +7,7 @@ export type CreateFolder = {
   name: string;
   parentNodeId: number;
   type: NodeTypes.FOLDER;
-  userId?: number;
+  userId: number;
 };
 
 export type UserFolderResponse = {
