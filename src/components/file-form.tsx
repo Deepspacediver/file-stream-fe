@@ -7,6 +7,7 @@ import Button from "./button";
 import Select from "./select";
 import { CreateFolderSchema } from "./folder-form";
 import FileInput from "./file-input";
+import { SelectOption } from "@/types/option-types";
 
 const FILE_SIZE_LIMIT = 5242880;
 
@@ -21,18 +22,11 @@ const CreateFileSchema = CreateFolderSchema.extend({
 });
 type CreateFile = z.infer<typeof CreateFileSchema>;
 
-const mockOptions = [
-  {
-    name: "prop",
-    id: 0,
-  },
-  {
-    name: "props 1",
-    id: 1,
-  },
-];
+type FileFormProps = {
+  folderOptions: SelectOption[];
+};
 
-export default function FileForm() {
+export default function FileForm({ folderOptions }: FileFormProps) {
   const {
     register,
     handleSubmit,
@@ -43,7 +37,6 @@ export default function FileForm() {
     resolver: zodResolver(CreateFileSchema),
     defaultValues: {
       name: "",
-      parentFolder: "ROOT",
     },
   });
 
@@ -63,8 +56,8 @@ export default function FileForm() {
       <Input error={errors["name"]} label="Name" {...register("name")} />
       <Select
         label="Parent folder"
-        {...register("parentFolder")}
-        options={mockOptions}
+        {...register("parentFolderId")}
+        options={folderOptions}
       />
       <FileInput
         error={errors["file"] as FieldError}
