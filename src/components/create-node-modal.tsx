@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useContext, useState } from "react";
 import Button from "@components/button";
 import CloseIcon from "@/assets/icons/close-icon.svg?react";
 import clsx from "clsx";
@@ -7,6 +7,9 @@ import { CreateNodeOptions } from "@/constants/select-options";
 import { NodeTypes } from "@/types/node-types";
 import FolderForm from "@components/folder-form";
 import FileForm from "@components/file-form";
+import { useGetUserFolders } from "@/api/queries/users-queries";
+import { UserContext } from "@/contexts/user-context";
+import { transformFolderToOptions } from "@/helpers/transform-options";
 
 type CreateNodeModalProps = { className?: string; closeModal: () => void };
 
@@ -16,6 +19,11 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
       NodeTypes.FOLDER
     );
     const isFolderResource = resourceType === NodeTypes.FOLDER;
+
+    const { user } = useContext(UserContext);
+    const { folders } = useGetUserFolders(user?.userId);
+
+    const folderOptions = transformFolderToOptions(folders ?? []);
 
     return (
       <dialog
@@ -46,7 +54,11 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
             }}
           />
         </div>
-        {isFolderResource ? <FolderForm /> : <FileForm />}
+        {isFolderResource ? (
+          <FolderForm folderOptions={folderOptions} />
+        ) : (
+          <FileForm folderOptions={folderOptions} />
+        )}
       </dialog>
     );
   }
