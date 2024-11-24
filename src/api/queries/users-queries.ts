@@ -1,11 +1,12 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { registerUser } from "../services/users-services";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getUserFolders, registerUser } from "../services/users-services";
 import { useNavigate } from "react-router-dom";
 import { setIsLogged } from "@/helpers/local-storage-helpers";
 import { useContext } from "react";
 import { UserContext } from "@/contexts/user-context";
 
 const BASE_KEY = "users";
+const FOLDERS_KEY = "user_folders";
 
 export const useRegisterUser = () => {
   const { setUser } = useContext(UserContext);
@@ -22,4 +23,14 @@ export const useRegisterUser = () => {
   });
 
   return { createUser, isPending };
+};
+
+export const useGetUserFolders = (userId?: number, isDisabled?: boolean) => {
+  const { data: folders, isLoading } = useQuery({
+    enabled: !!userId || isDisabled,
+    queryFn: () => getUserFolders(userId!),
+    queryKey: [FOLDERS_KEY, [userId]],
+  });
+
+  return { folders, isLoading };
 };
