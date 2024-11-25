@@ -11,7 +11,7 @@ enum UserRoutes {
 
 export const createFolder = async (payload: CreateFolder) => {
   const { userId, ...rest } = payload;
-  const { data } = await axiosClient.put(
+  const { data } = await axiosClient.post<UserFolderResponse>(
     `${UserRoutes.USERS}/${userId}${UserRoutes.NODES}`,
     {
       ...rest,
