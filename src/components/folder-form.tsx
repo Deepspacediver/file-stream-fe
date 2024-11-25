@@ -34,6 +34,7 @@ export default function FolderForm({ folderOptions }: FolderFormProps) {
     resolver: zodResolver(CreateFolderSchema),
     defaultValues: {
       name: "",
+      parentNodeId: folderOptions[0].id,
     },
   });
   const { user } = useContext(UserContext);

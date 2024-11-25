@@ -21,7 +21,7 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
     const isFolderResource = resourceType === NodeTypes.FOLDER;
 
     const { user } = useContext(UserContext);
-    const { folders } = useGetUserFolders(user?.userId);
+    const { folders, isLoading } = useGetUserFolders(user?.userId);
 
     const folderOptions = transformFolderToOptions(folders ?? []);
 
@@ -54,11 +54,10 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
             }}
           />
         </div>
-        {isFolderResource ? (
-          <FolderForm folderOptions={folderOptions} />
-        ) : (
-          <FileForm folderOptions={folderOptions} />
-        )}
+        {isLoading && <div>Loading...</div>}
+        {isFolderResource
+          ? !isLoading && <FolderForm folderOptions={folderOptions} />
+          : !isLoading && <FileForm folderOptions={folderOptions} />}
       </dialog>
     );
   }
