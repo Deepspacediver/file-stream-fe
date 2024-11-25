@@ -30,7 +30,6 @@ export default function FileForm({ folderOptions }: FileFormProps) {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<CreateFile>({
     mode: "all",
@@ -45,8 +44,6 @@ export default function FileForm({ folderOptions }: FileFormProps) {
     console.log(data);
   };
 
-  console.log(watch("file"));
-
   return (
     <form
       className="transparent-background flex flex-col gap-5"
@@ -56,7 +53,7 @@ export default function FileForm({ folderOptions }: FileFormProps) {
       <Input error={errors["name"]} label="Name" {...register("name")} />
       <Select
         label="Parent folder"
-        {...register("parentFolderId")}
+        {...register("parentNodeId")}
         options={folderOptions}
       />
       <FileInput
