@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axios-client";
-import { UserFolderResponse } from "@/types/node-types";
+import { NodeObject, UserFolderResponse } from "@/types/node-types";
 import { CreateUser, UserWithoutPassword } from "@/types/user-types";
 import { CreateFolder } from "@/types/node-types";
 
@@ -11,7 +11,7 @@ enum UserRoutes {
 
 export const createFolder = async (payload: CreateFolder) => {
   const { userId, ...rest } = payload;
-  const { data } = await axiosClient.post<UserFolderResponse>(
+  const { data } = await axiosClient.post<NodeObject>(
     `${UserRoutes.USERS}/${userId}${UserRoutes.NODES}`,
     {
       ...rest,
