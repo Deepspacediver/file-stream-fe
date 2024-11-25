@@ -11,6 +11,6 @@ export type CreateFolder = {
 };
 
 export type UserFolderResponse = {
-  node_id: number;
+  nodeId: number;
   name: string;
 };
