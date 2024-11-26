@@ -30,7 +30,7 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
         id="modal"
         className={clsx(
           `rounded-xl text-col-white bg-gradient-vertical backdrop:bg-black/50 
-          backdrop:backdrop-blur-md m-auto px-9 py-5 w-10/12 max-w-xl`,
+          backdrop:backdrop-blur-md m-auto px-5 py-4 sm:py-8 sm:px-9 w-10/12 max-w-xl`,
           className
         )}
         ref={ref}
@@ -47,7 +47,7 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
           <Select
             wrapperClassName="mb-5"
             labelClassName="text-2xl font-medium inline-block mb-3"
-            label="Type of resource:"
+            label="Type of resource"
             options={CreateNodeOptions}
             onChange={(e) => {
               setResourceType(e.currentTarget.value as NodeTypes);
