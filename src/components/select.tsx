@@ -26,13 +26,13 @@ export default forwardRef<HTMLSelectElement, SelectProps>(function Select(
           className={twMerge(clsx("text-xl font-medium", labelClassName))}
           htmlFor={rest.id}
         >
-          {label}
+          {label}:
         </label>
       )}
       <select
         className={twMerge(
           clsx(
-            " hover:cursor-pointer p-2 w-full px-1 focus:outline-none bg-col-white-transparent",
+            "hover:cursor-pointer text-lg p-2 w-full focus:outline-none bg-col-white-transparent",
             hasError && "bg-col-error-transparent"
           )
         )}
