@@ -10,6 +10,7 @@ import { SelectOption } from "@/types/option-types";
 import { UserContext } from "@/contexts/user-context";
 import { useCreateFolder } from "@/api/queries/users-queries";
 import { CreateFolder, NodeTypes } from "@/types/node-types";
+import { ButtonVariants } from "@/constants/button-variants";
 
 export const CreateFolderSchema = z.object({
   name: z
@@ -28,7 +29,8 @@ export default function FolderForm({ folderOptions }: FolderFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+
+    formState: { errors, isValid },
   } = useForm<CreateFolderForm>({
     mode: "all",
     resolver: zodResolver(CreateFolderSchema),
@@ -64,7 +66,13 @@ export default function FolderForm({ folderOptions }: FolderFormProps) {
         {...register("parentNodeId")}
         error={errors["parentNodeId"]}
       />
-      <Button className="mx-auto">Submit</Button>
+      <Button
+        disabled={!isValid}
+        variant={ButtonVariants.SUBMIT}
+        className="mx-auto"
+      >
+        Submit
+      </Button>
     </form>
   );
 }
