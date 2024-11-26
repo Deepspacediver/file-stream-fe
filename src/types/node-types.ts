@@ -18,3 +18,15 @@ export type CreateFolder = Pick<
 >;
 
 export type UserFolderResponse = Pick<NodeObject, "name" | "nodeId">;
+
+export type CreateFile = Pick<
+  NodeObject,
+  "name" | "type" | "userId" | "parentNodeId"
+> & {
+  file: File;
+};
+
+export type CreateFileFormData = {
+  userId: number;
+  formData: FormData;
+};
