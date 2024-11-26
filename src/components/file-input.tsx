@@ -13,7 +13,6 @@ const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
     { name, error, label, type = "file", onChange, ...rest },
     ref
   ) {
-    console.log(error);
     const [fileName, setFileName] = useState("");
     const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
       const fileList = e.currentTarget.files;
@@ -27,20 +26,23 @@ const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
     return (
       <div
         className={clsx(
-          "flex flex-col gap-1 w-full",
+          "flex flex-col gap-1 w-fit",
           hasError && "text-col-error"
         )}
       >
         <label
-          className="flex flex-col sm:flex-row gap-1 text-xl font-medium w-full"
+          className="flex flex-col gap-1 text-lg font-medium w-full"
           htmlFor={name}
         >
-          <span className="w-fit max-h-fit cursor-pointer magnify inline-block p-3 rounded-xl bg-col-white text-col-black">
-            {label}
+          <p className="text-xl font-medium">{label}:</p>
+          <span className="flex flex-col sm:flex-row gap-1">
+            <div className="w-fit max-h-fit cursor-pointer magnify inline-block p-2 rounded-xl bg-col-white text-col-black">
+              Upload file
+            </div>
+            {!!fileName && (
+              <p className="text-base flex items-center">{fileName}</p>
+            )}
           </span>
-          {!!fileName && (
-            <p className="text-base flex items-center">{fileName}</p>
-          )}
         </label>
 
         <input
