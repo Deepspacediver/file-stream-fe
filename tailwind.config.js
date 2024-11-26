@@ -10,7 +10,6 @@ export default {
         "col-purple-light": "#4c26ea",
         "col-black": "#000000",
         "col-error": "#FFA07A",
-        "col-error-transparent": "rgba(255, 160, 122, .5)",
       },
       backgroundImage: {
         gradient: `radial-gradient(circle farthest-corner at 10% 20%,  rgba(100,43,115,1) 0%, rgba(4,0,4,1) 90% )`,

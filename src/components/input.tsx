@@ -1,10 +1,10 @@
-import { forwardRef, InputHTMLAttributes, ReactNode } from "react";
+import { forwardRef, InputHTMLAttributes } from "react";
 import FormError from "./form-error";
 import clsx from "clsx";
 import { FieldError } from "react-hook-form";
 
 type InputProps = {
-  label: ReactNode;
+  label: string;
   error?: FieldError;
 } & InputHTMLAttributes<HTMLInputElement>;
 
