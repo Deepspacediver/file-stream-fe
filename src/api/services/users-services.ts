@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axios-client";
-import { NodeObject, UserFolderResponse } from "@/types/node-types";
+import { CreateFile, NodeObject, UserFolderResponse } from "@/types/node-types";
 import { CreateUser, UserWithoutPassword } from "@/types/user-types";
 import { CreateFolder } from "@/types/node-types";
 
@@ -34,6 +34,18 @@ export const registerUser = async ({ username, password }: CreateUser) => {
 export const getUserFolders = async (userId: number) => {
   const { data } = await axiosClient.get<UserFolderResponse[]>(
     `${UserRoutes.USERS}/${userId}${UserRoutes.USER_FOLDERS}`
+  );
+  return data;
+};
+
+export const createFile = async (payload: CreateFile) => {
+  const { userId, ...rest } = payload;
+  const { data } = await axiosClient.post<NodeObject>(
+    `${UserRoutes.USERS}/${userId}${UserRoutes.NODES}`,
+    {
+      ...rest,
+    },
+    { headers: { "Content-Type": "multipart/form-data" } }
   );
   return data;
 };

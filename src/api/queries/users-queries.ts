@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  createFile,
   createFolder,
   getUserFolders,
   registerUser,
@@ -12,6 +13,7 @@ import { UserFolderResponse } from "@/types/node-types";
 
 const BASE_KEY = "users";
 const FOLDERS_KEY = "user_folders";
+const FILES_KEY = "user_files";
 
 export const useRegisterUser = () => {
   const { setUser } = useContext(UserContext);
@@ -58,4 +60,19 @@ export const useCreateFolder = (userId: number) => {
   });
 
   return { createNewFolder, isLoading };
+};
+
+export const useCreateFile = (userId: number) => {
+  const queryClient = useQueryClient();
+  const { mutate: createNewFile, isPending: isLoading } = useMutation({
+    mutationFn: createFile,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [FILES_KEY, userId] });
+    },
+  });
+
+  return {
+    createNewFile,
+    isLoading,
+  };
 };
