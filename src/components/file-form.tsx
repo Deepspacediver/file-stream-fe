@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "@components/input";
-import { BaseSyntheticEvent } from "react";
+import { BaseSyntheticEvent, useContext } from "react";
 import { FieldError, useForm } from "react-hook-form";
 import { z } from "zod";
 import Button from "./button";
@@ -8,19 +8,22 @@ import Select from "./select";
 import { CreateFolderSchema } from "./folder-form";
 import FileInput from "./file-input";
 import { SelectOption } from "@/types/option-types";
+import { UserContext } from "@/contexts/user-context";
+import { useCreateFile } from "@/api/queries/users-queries";
+import { CreateFile, NodeTypes } from "@/types/node-types";
+import { ButtonVariants } from "@/constants/button-variants";
 
 const FILE_SIZE_LIMIT = 5242880;
 
-const CreateFileSchema = CreateFolderSchema.extend({
+const FileFormSchema = CreateFolderSchema.extend({
   file: z
-    .custom((file) => file instanceof FileList && file.length === 1, {
-      message: "File is missing",
-    })
-    .refine((val) => (val as FileList)[0].size <= FILE_SIZE_LIMIT, {
+    .instanceof(FileList, { message: "A file is in a wrong format" })
+    .refine((val) => !!val[0], { message: "A file is required" })
+    .refine((val) => val[0] && val[0].size <= FILE_SIZE_LIMIT, {
       message: "File cannot exceed size of 5 mb ",
     }),
 });
-type CreateFile = z.infer<typeof CreateFileSchema>;
+type FileFormFields = z.infer<typeof FileFormSchema>;
 
 type FileFormProps = {
   folderOptions: SelectOption[];
@@ -30,18 +33,29 @@ export default function FileForm({ folderOptions }: FileFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<CreateFile>({
+    formState: { errors, isValid },
+  } = useForm<FileFormFields>({
     mode: "all",
-    resolver: zodResolver(CreateFileSchema),
+    resolver: zodResolver(FileFormSchema),
     defaultValues: {
       name: "",
+      parentNodeId: folderOptions[0].id,
     },
   });
+  const { user } = useContext(UserContext);
+  const userId = user!.userId;
+  const { createNewFile } = useCreateFile(userId);
 
-  const onSubmit = (data: CreateFile, e?: BaseSyntheticEvent) => {
+  const onSubmit = (data: FileFormFields, e?: BaseSyntheticEvent) => {
     e?.preventDefault();
-    console.log(data);
+    const file = data.file[0];
+    const dataToSend = {
+      ...data,
+      file,
+      type: NodeTypes.FILE,
+      userId,
+    } as CreateFile;
+    createNewFile(dataToSend);
   };
 
   return (
@@ -59,9 +73,15 @@ export default function FileForm({ folderOptions }: FileFormProps) {
       <FileInput
         error={errors["file"] as FieldError}
         {...register("file")}
-        label="Upload file"
+        label="File"
       />
-      <Button className="mx-auto">Submit</Button>
+      <Button
+        disabled={!isValid}
+        className="mx-auto"
+        variant={ButtonVariants.SUBMIT}
+      >
+        Submit
+      </Button>
     </form>
   );
 }
