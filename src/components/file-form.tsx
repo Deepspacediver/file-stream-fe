@@ -76,7 +76,7 @@ export default function FileForm({ folderOptions }: FileFormProps) {
         label="File"
       />
       <Button
-        isLoading={isLoading}
+        isLoading={isLoading || isLoading}
         disabled={!isValid}
         className="mx-auto"
         variant={ButtonVariants.SUBMIT}

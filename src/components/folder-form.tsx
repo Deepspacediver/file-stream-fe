@@ -68,7 +68,7 @@ export default function FolderForm({ folderOptions }: FolderFormProps) {
         error={errors["parentNodeId"]}
       />
       <Button
-        disabled={!isValid}
+        disabled={!isValid || isLoading}
         isLoading={isLoading}
         variant={ButtonVariants.SUBMIT}
         className="mx-auto"

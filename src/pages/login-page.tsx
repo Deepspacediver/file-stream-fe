@@ -80,7 +80,7 @@ export default function LoginPage() {
           <CustomNavlink to={"/register"}>Create an account</CustomNavlink>
         </p>
         <Button
-          disabled={!isValid}
+          disabled={!isValid || isLoading}
           isLoading={isLoading}
           variant={ButtonVariants.SUBMIT}
           className="mx-auto"

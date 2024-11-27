@@ -114,7 +114,7 @@ export default function RegisterPage() {
           Already a user? <CustomNavlink to={"/login"}>Login</CustomNavlink>
         </p>
         <Button
-          disabled={!isValid}
+          disabled={!isValid || isLoading}
           isLoading={isLoading}
           variant={ButtonVariants.SUBMIT}
           className="mx-auto"
