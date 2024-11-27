@@ -4,16 +4,31 @@ import { twMerge } from "tailwind-merge";
 
 type LoaderProps = {
   isFullScreen?: boolean;
-  className?: string;
+  backgroundClassName?: string;
+  iconClassName?: string;
 };
 
-export default function Loader({ isFullScreen, className }: LoaderProps) {
-  const fullScreenIconStyle = `absolute top-1/2 left-1/2`;
-  return (
-    <LoaderSVG
+export default function Loader({
+  isFullScreen,
+  backgroundClassName,
+  iconClassName,
+}: LoaderProps) {
+  const loadIcon = (
+    <LoaderSVG className={twMerge(clsx("animate-spin", iconClassName))} />
+  );
+
+  return isFullScreen ? (
+    <div
       className={twMerge(
-        clsx("animate-spin", isFullScreen && fullScreenIconStyle, className)
+        clsx(
+          "absolute top-0 left-0 w-full h-full bg-col-white flex items-center justify-center",
+          backgroundClassName
+        )
       )}
-    />
+    >
+      {loadIcon}
+    </div>
+  ) : (
+    loadIcon
   );
 }
