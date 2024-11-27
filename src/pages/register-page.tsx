@@ -14,6 +14,7 @@ import { useRegisterUser } from "@/api/queries/users-queries";
 import CustomNavlink from "@/components/custom-navlink";
 import { UserContext } from "@/contexts/user-context";
 import { useNavigate } from "react-router-dom";
+import { ButtonVariants } from "@/constants/button-variants";
 
 const PasswordSchema = z.coerce
   .string({
@@ -62,11 +63,11 @@ export default function RegisterPage() {
     if (user) {
       navigate("/");
     }
-  }, []);
+  }, [navigate, user]);
 
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     register,
   } = useForm<RegisterSchemaType>({
     resolver: zodResolver(RegisterSchema),
@@ -78,7 +79,7 @@ export default function RegisterPage() {
     },
   });
 
-  const { createUser } = useRegisterUser();
+  const { createUser, isLoading } = useRegisterUser();
 
   const onSubmit = (data: RegisterSchemaType, e?: BaseSyntheticEvent) => {
     e?.preventDefault();
@@ -112,7 +113,14 @@ export default function RegisterPage() {
         <p className="text-xl">
           Already a user? <CustomNavlink to={"/login"}>Login</CustomNavlink>
         </p>
-        <Button className="mx-auto">Submit</Button>
+        <Button
+          disabled={!isValid || isLoading}
+          isLoading={isLoading}
+          variant={ButtonVariants.SUBMIT}
+          className="mx-auto"
+        >
+          Submit
+        </Button>
       </form>
     </div>
   );

@@ -44,7 +44,7 @@ export default function FileForm({ folderOptions }: FileFormProps) {
   });
   const { user } = useContext(UserContext);
   const userId = user!.userId;
-  const { createNewFile } = useCreateFile(userId);
+  const { createNewFile, isLoading } = useCreateFile(userId);
 
   const onSubmit = (data: FileFormFields, e?: BaseSyntheticEvent) => {
     e?.preventDefault();
@@ -76,6 +76,7 @@ export default function FileForm({ folderOptions }: FileFormProps) {
         label="File"
       />
       <Button
+        isLoading={isLoading || isLoading}
         disabled={!isValid}
         className="mx-auto"
         variant={ButtonVariants.SUBMIT}
