@@ -15,7 +15,8 @@ import { ButtonVariants } from "@/constants/button-variants";
 export const CreateFolderSchema = z.object({
   name: z
     .string({ message: "Name is required" })
-    .min(1, { message: "Name cannot be emptty" })
+    .max(15, { message: "Name cannot exceed 15 characters" })
+    .min(1, { message: "Name cannot be empty" })
     .regex(CONTAINS_WHITE_SPACE_REGEX),
   parentNodeId: z.coerce.number({ message: "Parent folder must be a number" }),
 });
@@ -41,7 +42,7 @@ export default function FolderForm({ folderOptions }: FolderFormProps) {
   });
   const { user } = useContext(UserContext);
   const userId = user!.userId;
-  const { createNewFolder } = useCreateFolder(userId);
+  const { createNewFolder, isLoading } = useCreateFolder(userId);
 
   const onSubmit = (data: CreateFolderForm, e?: BaseSyntheticEvent) => {
     e?.preventDefault();
@@ -68,6 +69,7 @@ export default function FolderForm({ folderOptions }: FolderFormProps) {
       />
       <Button
         disabled={!isValid}
+        isLoading={isLoading}
         variant={ButtonVariants.SUBMIT}
         className="mx-auto"
       >

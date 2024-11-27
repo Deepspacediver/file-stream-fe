@@ -9,6 +9,7 @@ import { useLogin } from "@/api/queries/auth-queries";
 import { CONTAINS_WHITE_SPACE_REGEX } from "@/constants/regex";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "@/contexts/user-context";
+import { ButtonVariants } from "@/constants/button-variants";
 
 const LoginSchema = z.object({
   username: z
@@ -34,11 +35,11 @@ export default function LoginPage() {
     if (user) {
       navigate("/");
     }
-  }, []);
+  }, [navigate, user]);
 
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     register,
   } = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
@@ -49,7 +50,7 @@ export default function LoginPage() {
     },
   });
 
-  const { loginUser } = useLogin();
+  const { loginUser, isLoading } = useLogin();
 
   const onSubmit = (data: LoginSchemaType, e?: BaseSyntheticEvent) => {
     e?.preventDefault();
@@ -78,7 +79,14 @@ export default function LoginPage() {
           Don't have an account?{" "}
           <CustomNavlink to={"/register"}>Create an account</CustomNavlink>
         </p>
-        <Button className="mx-auto">Submit</Button>
+        <Button
+          disabled={!isValid}
+          isLoading={isLoading}
+          variant={ButtonVariants.SUBMIT}
+          className="mx-auto"
+        >
+          Submit
+        </Button>
       </form>
     </div>
   );
