@@ -34,7 +34,7 @@ export default function Button({
         )
       )}
     >
-      {isLoading ? <Loader className="h-8 w-8 mx-auto" /> : children}
+      {isLoading ? <Loader iconClassName="h-8 w-8 mx-auto" /> : children}
     </button>
   );
 }
