@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Button from "./button";
 import Select from "./select";
-import { SelectOption } from "@/types/option-types";
 import { UserContext } from "@/contexts/user-context";
 import { useCreateFolder } from "@/api/queries/users-queries";
 import { CreateFolder, NodeTypes } from "@/types/node-types";
@@ -23,7 +22,7 @@ export const CreateFolderSchema = z.object({
 type CreateFolderForm = z.infer<typeof CreateFolderSchema>;
 
 type FolderFormProps = {
-  folderOptions: SelectOption[];
+  folderOptions: { id: number; name: string }[];
 };
 
 export default function FolderForm({ folderOptions }: FolderFormProps) {

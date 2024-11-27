@@ -1,5 +1,5 @@
-import { SelectOption } from "@/types/option-types";
 import { NodeTypes } from "@/types/node-types";
+import { SelectOption } from "@/types/option-types";
 
 export const CreateNodeOptions: SelectOption[] = [
   {
