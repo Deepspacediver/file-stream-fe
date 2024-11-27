@@ -15,7 +15,7 @@ export const useLogin = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
   const queryClient = useQueryClient();
-  const { mutate: loginUser } = useMutation({
+  const { mutate: loginUser, isPending: isLoading } = useMutation({
     mutationFn: login,
     onSuccess: (user) => {
       setIsLogged();
@@ -25,7 +25,7 @@ export const useLogin = () => {
     },
   });
 
-  return { loginUser };
+  return { loginUser, isLoading };
 };
 
 export const useGetLoggedUserData = (isDisabled?: boolean) => {

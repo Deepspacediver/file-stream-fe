@@ -19,7 +19,7 @@ export const useRegisterUser = () => {
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { mutate: createUser, isPending } = useMutation({
+  const { mutate: createUser, isPending: isLoading } = useMutation({
     mutationFn: registerUser,
     onSuccess: (user) => {
       setUser(user);
@@ -29,7 +29,7 @@ export const useRegisterUser = () => {
     },
   });
 
-  return { createUser, isPending };
+  return { createUser, isLoading };
 };
 
 export const useGetUserFolders = (userId?: number) => {
