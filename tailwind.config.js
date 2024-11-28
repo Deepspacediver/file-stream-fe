@@ -12,6 +12,10 @@ export default {
         "col-error": "#FFA07A",
         "col-error-transparent": "rgba(255, 160, 122, .5)",
       },
+      gridTemplateRows: {
+        none: "0fr",
+        fr: "1fr",
+      },
       backgroundImage: {
         gradient: `radial-gradient(circle farthest-corner at 10% 20%,  rgba(100,43,115,1) 0%, rgba(4,0,4,1) 90% )`,
         "gradient-vertical": `linear-gradient(180deg, rgb(57, 31, 105) -2.3%, rgb(115, 57, 178) 54.4%, rgb(231, 75, 184) 100.4%);`,
