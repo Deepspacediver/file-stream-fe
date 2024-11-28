@@ -3,6 +3,7 @@ import {
   createFile,
   createFolder,
   getUserFolders,
+  getUserFolderTree,
   registerUser,
 } from "../services/users-services";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +15,7 @@ import { UserFolderResponse } from "@/types/node-types";
 const BASE_KEY = "users";
 const FOLDERS_KEY = "user_folders";
 const FILES_KEY = "user_files";
+const FOLDER_TREE_KEY = "user_folder_tree";
 
 export const useRegisterUser = () => {
   const { setUser } = useContext(UserContext);
@@ -75,4 +77,13 @@ export const useCreateFile = (userId: number) => {
     createNewFile,
     isLoading,
   };
+};
+
+export const useGetUserFolderTree = (userId?: number) => {
+  const { data: folderTree, isLoading } = useQuery({
+    queryKey: [FOLDER_TREE_KEY, userId],
+    queryFn: () => getUserFolderTree(userId!),
+    enabled: !!userId,
+  });
+  return { isLoading, folderTree };
 };
