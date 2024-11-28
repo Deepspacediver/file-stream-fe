@@ -16,16 +16,19 @@ export default function FolderMenuItem({ folder }: FolderMenuItemProps) {
   };
 
   return (
-    <div className="text-col-white pl-3 overflow-hidden">
-      <div className="flex items-center gap-2">
-        <span className="flex items-center gap-1 hover:cursor-pointer">
-          <FolderIcon className="w-10 h-10" />
+    <div className="text-col-white pl-4 overflow-y-hidden">
+      <div
+        onDoubleClick={toggleChildrenOpen}
+        className="flex items-center gap-2 px-1 w-fit rounded-md hover:bg-col-white-transparent hover:cursor-pointer"
+      >
+        <span className="flex items-center gap-1">
+          <FolderIcon className="w-8 h-8" />
           {folder.name}
         </span>
         <DropdownIcon
           onClick={toggleChildrenOpen}
           className={clsx(
-            "w-5 h-5 rotate-0 transition-all hover:cursor-pointer",
+            " w-4 h-4 rotate-0 transition-all ",
             areChildrenOpen && "rotate-180"
           )}
         />
@@ -34,7 +37,7 @@ export default function FolderMenuItem({ folder }: FolderMenuItemProps) {
         <div
           className={twMerge(
             clsx(
-              "grid grid-rows-none transition-[grid-template-rows] overflow-hidden",
+              "grid grid-rows-none transition-[grid-template-rows] overflow-y-hidden",
               areChildrenOpen && "grid-rows-fr"
             )
           )}
