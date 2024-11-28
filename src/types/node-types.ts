@@ -25,3 +25,10 @@ export type CreateFile = Pick<
 > & {
   file: File;
 };
+
+export type FolderTree = Pick<
+  NodeObject,
+  "name" | "nodeId" | "parentNodeId" | "userId"
+> & {
+  children?: FolderTree[];
+};
