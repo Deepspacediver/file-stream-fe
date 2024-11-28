@@ -8,7 +8,7 @@ type FolderMenuItemProps = {
   folder: FolderTree;
 };
 
-export default function FolderMenuItem({ folder }: FolderMenuItemProps) {
+export default function FolderMenuTree({ folder }: FolderMenuItemProps) {
   const [areChildrenOpen, setAreChildrenOpen] = useState(false);
 
   const toggleChildrenOpen = () => {
