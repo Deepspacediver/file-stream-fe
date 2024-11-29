@@ -13,10 +13,13 @@ import Loader from "./components/loader";
 const router = createBrowserRouter(routes);
 
 export default function App() {
-  const [user, setUser] = useState<UserWithoutPassword | null>(null);
+  //User falsy states :undefied - initial state | null - set manually
+  const [user, setUser] = useState<UserWithoutPassword | null | undefined>();
   const { user: userResponse, isLoading } = useGetLoggedUserData(
-    !!user || !getIsLogged()
+    !getIsLogged()
   );
+
+  const userValue = user === null || !!user ? user : userResponse;
 
   useEffect(() => {
     if (userResponse) {
@@ -30,7 +33,7 @@ export default function App() {
   }
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user: userValue, setUser }}>
       <AxiosWrapper>
         <RouterProvider router={router} />
       </AxiosWrapper>
