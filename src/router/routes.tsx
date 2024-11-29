@@ -4,6 +4,7 @@ import LoginPage from "@/pages/login-page";
 import RegisterPage from "@/pages/register-page";
 import { ReactElement } from "react";
 import FolderView from "@/views/folder-view";
+import ProtectedRoute from "@/components/protected-route";
 
 type Route = {
   path: string;
@@ -27,7 +28,7 @@ export const routes: Route[] = [
       },
       {
         path: "/folders/:folderId",
-        element: <FolderView />,
+        element: <ProtectedRoute component={<FolderView />} />,
       },
     ],
   },
