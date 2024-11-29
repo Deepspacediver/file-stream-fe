@@ -1,11 +1,17 @@
 import axiosClient from "@/lib/axios-client";
-import { CreateFile, NodeObject, UserFolderResponse } from "@/types/node-types";
+import {
+  CreateFile,
+  FolderTree,
+  NodeObject,
+  UserFolderResponse,
+} from "@/types/node-types";
 import { CreateUser, UserWithoutPassword } from "@/types/user-types";
 import { CreateFolder } from "@/types/node-types";
 
 enum UserRoutes {
   USERS = "/users",
   USER_FOLDERS = "/folders",
+  FOLDER_TREE = "/folder-tree",
   NODES = "/nodes",
 }
 
@@ -35,6 +41,14 @@ export const getUserFolders = async (userId: number) => {
   const { data } = await axiosClient.get<UserFolderResponse[]>(
     `${UserRoutes.USERS}/${userId}${UserRoutes.USER_FOLDERS}`
   );
+  return data;
+};
+
+export const getUserFolderTree = async (userId: number) => {
+  const { data } = await axiosClient.get<FolderTree>(
+    `${UserRoutes.USERS}/${userId}${UserRoutes.FOLDER_TREE}`
+  );
+
   return data;
 };
 

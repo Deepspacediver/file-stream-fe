@@ -1,17 +1,21 @@
 import clsx from "clsx";
 import CustomNavlink from "./custom-navlink";
 import CloseIcon from "@/assets/icons/close-icon.svg?react";
+import { FolderTree } from "@/types/node-types";
+import FolderMenuTree from "./folder-menu-tree";
 
 type MobileMenuProps = {
   className?: string;
   handleIsMenuVisibility: () => void;
   isOpen: boolean;
+  folderTree?: FolderTree;
 };
 
 export default function MobileMenu({
   isOpen,
   handleIsMenuVisibility,
   className,
+  folderTree,
 }: MobileMenuProps) {
   return (
     <aside
@@ -32,6 +36,7 @@ export default function MobileMenu({
           }}
         />
       </div>
+      {folderTree && <FolderMenuTree folder={folderTree} />}
     </aside>
   );
 }

@@ -26,7 +26,9 @@ export type CreateFile = Pick<
   file: File;
 };
 
-export type CreateFileFormData = {
-  userId: number;
-  formData: FormData;
+export type FolderTree = Pick<
+  NodeObject,
+  "name" | "nodeId" | "parentNodeId" | "userId"
+> & {
+  children?: FolderTree[];
 };
