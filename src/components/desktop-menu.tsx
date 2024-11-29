@@ -1,12 +1,15 @@
 import logoSrc from "@/assets/icons/file-stream-logo.webp";
 import CustomNavlink from "@components/custom-navlink";
 import clsx from "clsx";
+import FolderMenuTree from "@components/folder-menu-tree";
+import { FolderTree } from "@/types/node-types";
 
 type MenuProps = {
   className?: string;
+  folderTree?: FolderTree;
 };
 
-export default function DesktopMenu({ className }: MenuProps) {
+export default function DesktopMenu({ className, folderTree }: MenuProps) {
   return (
     <aside
       className={clsx(
@@ -22,6 +25,7 @@ export default function DesktopMenu({ className }: MenuProps) {
           <h1 className="text-4xl font-medium text-col-white">FileStream</h1>
         </CustomNavlink>
       </div>
+      {folderTree && <FolderMenuTree folder={folderTree} />}
     </aside>
   );
 }
