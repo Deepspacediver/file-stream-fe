@@ -16,7 +16,7 @@ export default function FolderMenuTree({ folder }: FolderMenuItemProps) {
   };
 
   return (
-    <div className="text-col-white pl-4 overflow-y-hidden">
+    <div className="text-col-white overflow-y-hidden">
       <div
         onDoubleClick={toggleChildrenOpen}
         className="flex items-center gap-2 px-1 w-fit rounded-md hover:bg-col-white-transparent hover:cursor-pointer"
@@ -42,10 +42,10 @@ export default function FolderMenuTree({ folder }: FolderMenuItemProps) {
             )
           )}
         >
-          <div className="overflow-hidden">
+          <div className="overflow-hidden  pl-4">
             {folder.children.map((subFolder) => {
               return (
-                <FolderMenuItem key={subFolder.nodeId} folder={subFolder} />
+                <FolderMenuTree key={subFolder.nodeId} folder={subFolder} />
               );
             })}
           </div>
