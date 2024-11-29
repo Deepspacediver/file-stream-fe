@@ -3,6 +3,7 @@ import Layout from "@/views/layout";
 import LoginPage from "@/pages/login-page";
 import RegisterPage from "@/pages/register-page";
 import { ReactElement } from "react";
+import FolderView from "@/views/folder-view";
 
 type Route = {
   path: string;
@@ -23,6 +24,10 @@ export const routes: Route[] = [
       {
         path: "/login",
         element: <LoginPage />,
+      },
+      {
+        path: "/folders/:folderId",
+        element: <FolderView />,
       },
     ],
   },
