@@ -40,8 +40,8 @@ export default forwardRef<HTMLSelectElement, SelectProps>(function Select(
         {...rest}
       >
         {!!options.length &&
-          options.map(({ name, id }) => (
-            <option key={id} value={id}>
+          options.map(({ name, id }, index) => (
+            <option key={`${id}_${index}`} value={id}>
               {name}
             </option>
           ))}
