@@ -51,6 +51,8 @@ export const useCreateFolder = (userId: number) => {
       const newFolder: UserFolderResponse = {
         name: data.name,
         nodeId: data.nodeId,
+        parentNodeId: data.parentNodeId,
+        userId: data.userId,
       };
       queryClient.setQueryData(
         [FOLDERS_KEY, userId],
