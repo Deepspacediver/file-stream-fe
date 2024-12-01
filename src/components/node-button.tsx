@@ -20,7 +20,7 @@ export default function NodeButton() {
   };
 
   const mobileStyles =
-    "absolute inset-y-[85%] inset-x-[95%] rounded-3xl p-5 w-20 h-20";
+    "fixed inset-y-[85%] inset-x-[95%] rounded-3xl p-5 w-20 h-20 z-10";
   const desktopStyles = "lg:static lg:rounded-xl lg:p-2 lg:h-14";
   return (
     <>
