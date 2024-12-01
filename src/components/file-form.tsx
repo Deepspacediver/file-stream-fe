@@ -7,10 +7,9 @@ import Button from "./button";
 import Select from "./select";
 import { CreateFolderSchema } from "./folder-form";
 import FileInput from "./file-input";
-import { SelectOption } from "@/types/option-types";
 import { UserContext } from "@/contexts/user-context";
 import { useCreateFile } from "@/api/queries/users-queries";
-import { CreateFile, NodeTypes } from "@/types/node-types";
+import { CreateFile, FolderOption, NodeTypes } from "@/types/node-types";
 import { ButtonVariants } from "@/constants/button-variants";
 
 const FILE_SIZE_LIMIT = 5242880;
@@ -26,7 +25,7 @@ const FileFormSchema = CreateFolderSchema.extend({
 type FileFormFields = z.infer<typeof FileFormSchema>;
 
 type FileFormProps = {
-  folderOptions: SelectOption[];
+  folderOptions: FolderOption[];
 };
 
 export default function FileForm({ folderOptions }: FileFormProps) {
@@ -39,7 +38,7 @@ export default function FileForm({ folderOptions }: FileFormProps) {
     resolver: zodResolver(FileFormSchema),
     defaultValues: {
       name: "",
-      parentNodeId: folderOptions[0].id,
+      parentNodeId: folderOptions[0].id!,
     },
   });
   const { user } = useContext(UserContext);
