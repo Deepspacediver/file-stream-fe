@@ -29,7 +29,6 @@ export default function FolderForm({ folderOptions }: FolderFormProps) {
   const {
     register,
     handleSubmit,
-
     formState: { errors, isValid },
   } = useForm<CreateFolderForm>({
     mode: "all",
