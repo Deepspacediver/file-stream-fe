@@ -3,6 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      screens: {
+        xsm: "400px",
+      },
       colors: {
         "col-white": "#FFFFFF",
         "col-white-transparent": "rgba(240, 240, 240, .25)",

@@ -8,7 +8,7 @@ import Button from "./button";
 import Select from "./select";
 import { UserContext } from "@/contexts/user-context";
 import { useCreateFolder } from "@/api/queries/users-queries";
-import { CreateFolder, NodeTypes } from "@/types/node-types";
+import { CreateFolder, FolderOption, NodeTypes } from "@/types/node-types";
 import { ButtonVariants } from "@/constants/button-variants";
 
 export const CreateFolderSchema = z.object({
@@ -22,14 +22,13 @@ export const CreateFolderSchema = z.object({
 type CreateFolderForm = z.infer<typeof CreateFolderSchema>;
 
 type FolderFormProps = {
-  folderOptions: { id: number; name: string }[];
+  folderOptions: FolderOption[];
 };
 
 export default function FolderForm({ folderOptions }: FolderFormProps) {
   const {
     register,
     handleSubmit,
-
     formState: { errors, isValid },
   } = useForm<CreateFolderForm>({
     mode: "all",

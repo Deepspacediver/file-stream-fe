@@ -11,9 +11,9 @@ import Loader from "./loader";
 export default function UserMenu() {
   const { user } = useContext(UserContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { logout, isLoading } = useLogoutUser();
+  const { logout, isLoading: isLoggingOut } = useLogoutUser();
 
-  if (isLoading) {
+  if (isLoggingOut) {
     return <Loader isFullScreen />;
   }
 
@@ -37,7 +37,7 @@ export default function UserMenu() {
       <div
         className={clsx(
           "absolute right-1 -bottom-16 p-3 shadow-box-360 bg-col-white transform scale-y-0 origin-top transition-all rounded-md",
-          isMenuOpen && "scale-y-100"
+          isMenuOpen && "scale-y-100 z-30"
         )}
       >
         <ul>

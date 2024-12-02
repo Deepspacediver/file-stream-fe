@@ -36,4 +36,11 @@
   .magnify {
     @apply scale-95 hover:scale-100 transition-transform;
   }
+
+  .auto-fill-cols {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    @media (min-width: 400px) {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+  }
 }

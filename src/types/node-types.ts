@@ -17,7 +17,10 @@ export type CreateFolder = Pick<
   "name" | "parentNodeId" | "type" | "userId"
 >;
 
-export type UserFolderResponse = Pick<NodeObject, "name" | "nodeId">;
+export type UserFolderResponse = Pick<
+  NodeObject,
+  "name" | "nodeId" | "userId" | "parentNodeId"
+>;
 
 export type CreateFile = Pick<
   NodeObject,
@@ -32,3 +35,5 @@ export type FolderTree = Pick<
 > & {
   children?: FolderTree[];
 };
+
+export type FolderOption = { id: number; name: string };

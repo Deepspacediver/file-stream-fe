@@ -26,7 +26,7 @@ export default function FolderMenuTree({ folder }: FolderMenuItemProps) {
         className="flex items-center gap-2 px-1 w-fit rounded-md hover:bg-col-white-transparent hover:cursor-pointer"
       >
         <span
-          className="flex items-center gap-1"
+          className="flex items-center gap-1 select-none"
           onClick={() => {
             navigate(`/folders/${folderId}`, { replace: true });
           }}
