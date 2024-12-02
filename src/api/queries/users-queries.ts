@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFile,
   createFolder,
+  getFolderContent,
   getUserFolders,
   getUserFolderTree,
   registerUser,
@@ -10,12 +11,13 @@ import { useNavigate } from "react-router-dom";
 import { setIsLogged } from "@/helpers/local-storage-helpers";
 import { useContext } from "react";
 import { UserContext } from "@/contexts/user-context";
-import { UserFolderResponse } from "@/types/node-types";
+import { FolderContentRequest, UserFolderResponse } from "@/types/node-types";
 
 const BASE_KEY = "users";
 const FOLDERS_KEY = "user_folders";
 const FILES_KEY = "user_files";
 const FOLDER_TREE_KEY = "user_folder_tree";
+const FOLDER_CONTENT = "folder_content";
 
 export const useRegisterUser = () => {
   const { setUser } = useContext(UserContext);
@@ -88,4 +90,20 @@ export const useGetUserFolderTree = (userId?: number) => {
     enabled: !!userId,
   });
   return { isLoading, folderTree };
+};
+
+export const useGetFolderContent = ({
+  userId,
+  nodeId,
+}: FolderContentRequest) => {
+  const { data: folderContent, isLoading } = useQuery({
+    queryFn: () => getFolderContent({ userId, nodeId }),
+    queryKey: [FOLDER_CONTENT, nodeId, userId],
+    enabled: !!userId && !!nodeId,
+  });
+
+  return {
+    folderContent,
+    isLoading,
+  };
 };
