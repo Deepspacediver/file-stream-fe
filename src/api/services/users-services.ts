@@ -1,8 +1,8 @@
 import axiosClient from "@/lib/axios-client";
 import {
   CreateFile,
-  FolderContent,
   FolderContentRequest,
+  FolderContentResponse,
   FolderTree,
   NodeObject,
   UserFolderResponse,
@@ -70,7 +70,7 @@ export const getFolderContent = async ({
   userId,
   nodeId,
 }: FolderContentRequest) => {
-  const { data } = await axiosClient.get<FolderContent[]>(
+  const { data } = await axiosClient.get<FolderContentResponse>(
     `${UserRoutes.USERS}/${userId}${UserRoutes.USER_FOLDERS}/${nodeId}`
   );
 

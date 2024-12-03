@@ -96,14 +96,14 @@ export const useGetFolderContent = ({
   userId,
   nodeId,
 }: FolderContentRequest) => {
-  const { data: folderContent, isLoading } = useQuery({
+  const { data: folderWithContent, isLoading } = useQuery({
     queryFn: () => getFolderContent({ userId, nodeId }),
     queryKey: [FOLDER_CONTENT, nodeId, userId],
     enabled: !!userId && !!nodeId,
   });
 
   return {
-    folderContent,
+    folderWithContent,
     isLoading,
   };
 };
