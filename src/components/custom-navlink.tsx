@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 
 type CustomNavlinkProps = {
   className?: string;
@@ -19,10 +20,8 @@ export default function CustomNavlink({
     "w-fit min-w-32 text-center magnify rounded-2xl no-underline bg-col-white text-col-black p-2";
   return (
     <NavLink
-      className={clsx(
-        "underline",
-        isButton && buttonStyles,
-        className && className
+      className={twMerge(
+        clsx("underline", isButton && buttonStyles, className)
       )}
       to={to}
     >
