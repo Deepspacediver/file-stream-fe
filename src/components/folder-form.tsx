@@ -23,9 +23,13 @@ type CreateFolderForm = z.infer<typeof CreateFolderSchema>;
 
 type FolderFormProps = {
   folderOptions: FolderOption[];
+  defaultFolderOption: FolderOption | null;
 };
 
-export default function FolderForm({ folderOptions }: FolderFormProps) {
+export default function FolderForm({
+  folderOptions,
+  defaultFolderOption,
+}: FolderFormProps) {
   const {
     register,
     handleSubmit,
@@ -33,9 +37,9 @@ export default function FolderForm({ folderOptions }: FolderFormProps) {
   } = useForm<CreateFolderForm>({
     mode: "all",
     resolver: zodResolver(CreateFolderSchema),
-    defaultValues: {
+    values: {
       name: "",
-      parentNodeId: folderOptions[0].id,
+      parentNodeId: defaultFolderOption?.id ?? folderOptions[0].id,
     },
   });
   const { user } = useContext(UserContext);
