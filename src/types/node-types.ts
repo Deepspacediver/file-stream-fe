@@ -47,3 +47,8 @@ export type FolderContent = Pick<
   NodeObject,
   "nodeId" | "fileLink" | "type" | "name"
 >;
+
+export type FolderContentResponse = {
+  name: string;
+  content: FolderContent[];
+};
