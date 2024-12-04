@@ -10,9 +10,7 @@ export default function CopyText({ text }: CopyTextProps) {
   const [tooltipText, setTooltipText] = useState(tooltipCopy);
   return (
     <div
-      className="
-      w-fit mx-auto relative 
-      [&>div]:hover:opacity-100 [&>div]:hover:bottom-8"
+      className="w-fit mx-auto relative"
       onMouseOut={() => setTooltipText(tooltipCopy)}
       onClick={async (e) => {
         e.stopPropagation();
@@ -20,6 +18,9 @@ export default function CopyText({ text }: CopyTextProps) {
         setTooltipText(tooltipCopied);
       }}
     >
+      <span className="underline [&+div]:hover:opacity-100 [&+div]:hover:bottom-8">
+        Copy
+      </span>
       <div
         className={`
         absolute opacity-0 bottom-[900px] left-[-80%] bg-gray-200 p-2 rounded-lg border border-col-black
@@ -29,7 +30,6 @@ export default function CopyText({ text }: CopyTextProps) {
       >
         {tooltipText}
       </div>
-      <span className="underline">Copy</span>
     </div>
   );
 }
