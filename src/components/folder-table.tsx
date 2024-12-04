@@ -27,6 +27,7 @@ export default function FolderTable({ folderContent }: FolderTableProps) {
     () => [
       columnHelper.accessor("name", {
         header: "Name",
+        size: 300,
         cell: ({ row, getValue }) => {
           const cellData = getValue();
           const isFolder = row.original.type === NodeTypes.FOLDER;
@@ -82,6 +83,9 @@ export default function FolderTable({ folderContent }: FolderTableProps) {
               {headerGroup.headers.map((header) => {
                 return (
                   <th
+                    style={{
+                      width: header.getSize(),
+                    }}
                     onClick={header.column.getToggleSortingHandler()}
                     className={`p-2 relative ${
                       header.column.getCanSort() && "hover:cursor-pointer"
