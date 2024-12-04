@@ -30,7 +30,8 @@ export default function FolderTable({ folderContent }: FolderTableProps) {
         cell: ({ row, getValue }) => {
           const cellData = getValue();
           const isFolder = row.original.type === NodeTypes.FOLDER;
-          const iconDimensionStyle = "w-6 h-6 lg:w-7 lg:h-7";
+          const iconDimensionStyle =
+            "min-w-5 min-h-5  w-5 h-5 lg:min-w-7 lg:min-h-7 lg:w-7 lg:h-7";
           const icon = isFolder ? (
             <FolderIcon className={`text-col-black ${iconDimensionStyle}`} />
           ) : (
