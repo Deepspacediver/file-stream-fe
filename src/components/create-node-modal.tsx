@@ -32,7 +32,6 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
       ? folderOptions.find(({ id }) => id === currentlyOpenFolder) ?? null
       : null;
 
-    console.log({ defaultFolderOption });
     return (
       <dialog
         id="modal"

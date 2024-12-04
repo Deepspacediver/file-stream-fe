@@ -37,7 +37,6 @@ export default function FileForm({
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isValid },
   } = useForm<FileFormFields>({
     mode: "all",
@@ -51,7 +50,6 @@ export default function FileForm({
   const userId = user!.userId;
   const { createNewFile, isLoading } = useCreateFile(userId);
 
-  console.log(watch("parentNodeId"));
   const onSubmit = (data: FileFormFields, e?: BaseSyntheticEvent) => {
     e?.preventDefault();
     if (!data.file) {
