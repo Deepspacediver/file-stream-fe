@@ -24,7 +24,11 @@ export default function FolderView() {
   return (
     <div className="p-2 my-3">
       <h2 className="text-3xl font-medium">{folderWithContent?.name}</h2>
-      <FolderTable folderContent={folderWithContent?.content ?? []} />
+      {folderWithContent?.content.length ? (
+        <FolderTable folderContent={folderWithContent.content} />
+      ) : (
+        <p className="mt-2 text-xl">Folder is empty</p>
+      )}
     </div>
   );
 }
