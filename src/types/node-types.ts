@@ -37,3 +37,18 @@ export type FolderTree = Pick<
 };
 
 export type FolderOption = { id: number; name: string };
+
+export type FolderContentRequest = {
+  userId: number | null;
+  nodeId: number | null;
+};
+
+export type FolderContent = Pick<
+  NodeObject,
+  "nodeId" | "fileLink" | "type" | "name"
+>;
+
+export type FolderContentResponse = {
+  name: string;
+  content: FolderContent[];
+};

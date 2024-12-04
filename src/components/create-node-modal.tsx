@@ -10,6 +10,7 @@ import FileForm from "@components/file-form";
 import { useGetUserFolders } from "@/api/queries/users-queries";
 import { UserContext } from "@/contexts/user-context";
 import { transformFolderToOptions } from "@/helpers/transform-options";
+import { useParams } from "react-router-dom";
 
 type CreateNodeModalProps = { className?: string; closeModal: () => void };
 
@@ -24,6 +25,12 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
     const { folders, isLoading } = useGetUserFolders(user?.userId);
 
     const folderOptions = transformFolderToOptions(folders ?? []);
+    const { folderId } = useParams();
+    const currentlyOpenFolder = folderId ? +folderId : null;
+    //Needs to check if folderId is within fetched folders of logged user
+    const defaultFolderOption = currentlyOpenFolder
+      ? folderOptions.find(({ id }) => id === currentlyOpenFolder) ?? null
+      : null;
 
     return (
       <dialog
@@ -56,8 +63,18 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
         </div>
         {isLoading && <div>Loading...</div>}
         {isFolderResource
-          ? !isLoading && <FolderForm folderOptions={folderOptions} />
-          : !isLoading && <FileForm folderOptions={folderOptions} />}
+          ? !isLoading && (
+              <FolderForm
+                folderOptions={folderOptions}
+                defaultFolderOption={defaultFolderOption}
+              />
+            )
+          : !isLoading && (
+              <FileForm
+                folderOptions={folderOptions}
+                defaultFolderOption={defaultFolderOption}
+              />
+            )}
       </dialog>
     );
   }

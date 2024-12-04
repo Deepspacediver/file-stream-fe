@@ -4,26 +4,32 @@ import DropdownIcon from "@/assets/icons/chevron-down.svg?react";
 import { useState } from "react";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 type FolderMenuItemProps = {
   folder: FolderTree;
 };
 
 export default function FolderMenuTree({ folder }: FolderMenuItemProps) {
   const [areChildrenOpen, setAreChildrenOpen] = useState(false);
+  const { folderId: activeFolderId } = useParams();
+  const activeNodeId = activeFolderId ? +activeFolderId : null;
 
   const toggleChildrenOpen = () => {
     setAreChildrenOpen((prevState) => !prevState);
   };
 
   const folderId = folder.nodeId;
+  const isFolderChosen = folderId === activeNodeId;
   const navigate = useNavigate();
 
   return (
     <div className="text-col-white overflow-y-hidden">
       <div
         onDoubleClick={toggleChildrenOpen}
-        className="flex items-center gap-2 px-1 w-fit rounded-md hover:bg-col-white-transparent hover:cursor-pointer"
+        className={clsx(
+          "flex items-center gap-2 px-1 w-fit rounded-md hover:bg-gray-500 hover:cursor-pointer",
+          isFolderChosen && "bg-col-white-transparent"
+        )}
       >
         <span
           className="flex items-center gap-1 select-none"

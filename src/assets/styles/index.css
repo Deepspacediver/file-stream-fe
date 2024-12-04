@@ -43,4 +43,15 @@
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     }
   }
+  .bottom-arrow:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+    border-top: 7px solid #000000;
+    position: absolute;
+    left: 45%;
+    bottom: -8px;
+  }
 }

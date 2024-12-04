@@ -20,15 +20,20 @@ const FileFormSchema = CreateFolderSchema.extend({
     .refine((val) => !!val[0], { message: "A file is required" })
     .refine((val) => val[0] && val[0].size <= FILE_SIZE_LIMIT, {
       message: "File cannot exceed size of 5 mb ",
-    }),
+    })
+    .optional(),
 });
 type FileFormFields = z.infer<typeof FileFormSchema>;
 
 type FileFormProps = {
   folderOptions: FolderOption[];
+  defaultFolderOption: FolderOption | null;
 };
 
-export default function FileForm({ folderOptions }: FileFormProps) {
+export default function FileForm({
+  folderOptions,
+  defaultFolderOption,
+}: FileFormProps) {
   const {
     register,
     handleSubmit,
@@ -36,9 +41,9 @@ export default function FileForm({ folderOptions }: FileFormProps) {
   } = useForm<FileFormFields>({
     mode: "all",
     resolver: zodResolver(FileFormSchema),
-    defaultValues: {
+    values: {
+      parentNodeId: defaultFolderOption?.id ?? folderOptions[0].id,
       name: "",
-      parentNodeId: folderOptions[0].id!,
     },
   });
   const { user } = useContext(UserContext);
@@ -47,6 +52,9 @@ export default function FileForm({ folderOptions }: FileFormProps) {
 
   const onSubmit = (data: FileFormFields, e?: BaseSyntheticEvent) => {
     e?.preventDefault();
+    if (!data.file) {
+      return;
+    }
     const file = data.file[0];
     const dataToSend = {
       ...data,
