@@ -9,6 +9,7 @@ import {
   getSortedRowModel,
 } from "@tanstack/react-table";
 import FolderIcon from "@/assets/icons/folder-white-outline.svg?react";
+import EditPen from "@/assets/icons/edit-pen.svg?react";
 import FileIcon from "@/assets/icons/file-icon.svg?react";
 import { useMemo, useState } from "react";
 import clsx from "clsx";
@@ -57,6 +58,15 @@ export default function FolderTable({ folderContent }: FolderTableProps) {
           const cellData = getValue();
           const folderLink = `${location.host}/folders/${row.original.nodeId}`;
           return <CopyText text={cellData ?? folderLink} />;
+        },
+      }),
+      columnHelper.display({
+        id: "Edit",
+        header: "Edit",
+        enableResizing: false,
+        maxSize: 20,
+        cell: () => {
+          return <EditPen className="min-w-6 min-h-6 h-6 w-6 mx-auto" />;
         },
       }),
     ],
