@@ -40,8 +40,7 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
 
     return (
       <Modal
-        className={`rounded-xl text-col-white bg-gradient-vertical backdrop:bg-black/50 
-    backdrop:backdrop-blur-md m-auto px-5 py-4 sm:py-8 sm:px-9 w-10/12 max-w-xl`}
+        id="create-node-modal"
         ref={ref}
         closeModal={closeModal}
         onClose={onClose}
