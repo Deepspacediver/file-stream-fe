@@ -1,14 +1,17 @@
 import clsx from "clsx";
 import { forwardRef, ReactNode } from "react";
+import Button from "./button";
+import CloseIcon from "@/assets/icons/close-icon.svg?react";
 
 type ModalProps = {
   onClose?: () => void;
+  closeModal: () => void;
   className?: string;
   children: ReactNode;
 };
 
 export default forwardRef<HTMLDialogElement, ModalProps>(function Modal(
-  { className, onClose, children },
+  { className, onClose, children, closeModal },
   ref
 ) {
   return (
@@ -26,6 +29,16 @@ export default forwardRef<HTMLDialogElement, ModalProps>(function Modal(
       )}
       ref={ref}
     >
+      <div className="flex flex-col">
+        <Button
+          className="ml-auto min-w-fit bg-transparent"
+          onClick={() => {
+            closeModal();
+          }}
+        >
+          <CloseIcon className="w-6 h-6 text-col-white " />
+        </Button>
+      </div>
       {children}
     </dialog>
   );

@@ -1,6 +1,4 @@
 import { forwardRef, useContext, useState } from "react";
-import Button from "@components/button";
-import CloseIcon from "@/assets/icons/close-icon.svg?react";
 import Select from "@components/select";
 import { CreateNodeOptions } from "@/constants/select-options";
 import { EditNodeCell, NodeTypes } from "@/types/node-types";
@@ -45,29 +43,20 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
         className={`rounded-xl text-col-white bg-gradient-vertical backdrop:bg-black/50 
     backdrop:backdrop-blur-md m-auto px-5 py-4 sm:py-8 sm:px-9 w-10/12 max-w-xl`}
         ref={ref}
+        closeModal={closeModal}
         onClose={onClose}
       >
-        <div className="flex flex-col">
-          <Button
-            className="ml-auto min-w-fit bg-transparent"
-            onClick={() => {
-              closeModal();
+        {!isEditMode && (
+          <Select
+            wrapperClassName="mb-5"
+            labelClassName="text-2xl font-medium inline-block mb-3"
+            label="Type of resource"
+            options={CreateNodeOptions}
+            onChange={(e) => {
+              setResourceType(e.currentTarget.value as NodeTypes);
             }}
-          >
-            <CloseIcon className="w-6 h-6 text-col-white " />
-          </Button>
-          {!isEditMode && (
-            <Select
-              wrapperClassName="mb-5"
-              labelClassName="text-2xl font-medium inline-block mb-3"
-              label="Type of resource"
-              options={CreateNodeOptions}
-              onChange={(e) => {
-                setResourceType(e.currentTarget.value as NodeTypes);
-              }}
-            />
-          )}
-        </div>
+          />
+        )}
         {isLoading && <div>Loading...</div>}
         {isFolderResource
           ? !isLoading && (
