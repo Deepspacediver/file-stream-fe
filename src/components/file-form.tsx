@@ -8,8 +8,13 @@ import Select from "./select";
 import { CreateFolderSchema } from "./folder-form";
 import FileInput from "./file-input";
 import { UserContext } from "@/contexts/user-context";
-import { useCreateFile } from "@/api/queries/users-queries";
-import { CreateFile, FolderOption, NodeTypes } from "@/types/node-types";
+import { useCreateFile, useUpdateNode } from "@/api/queries/users-queries";
+import {
+  CreateFile,
+  EditNodeCell,
+  FolderOption,
+  NodeTypes,
+} from "@/types/node-types";
 import { ButtonVariants } from "@/constants/button-variants";
 
 const FILE_SIZE_LIMIT = 5242880;
@@ -28,11 +33,13 @@ type FileFormFields = z.infer<typeof FileFormSchema>;
 type FileFormProps = {
   folderOptions: FolderOption[];
   defaultFolderOption: FolderOption | null;
+  editedNode?: EditNodeCell | null;
 };
 
 export default function FileForm({
   folderOptions,
   defaultFolderOption,
+  editedNode,
 }: FileFormProps) {
   const {
     register,
@@ -42,16 +49,29 @@ export default function FileForm({
     mode: "all",
     resolver: zodResolver(FileFormSchema),
     values: {
-      parentNodeId: defaultFolderOption?.id ?? folderOptions[0].id,
-      name: "",
+      parentNodeId:
+        editedNode?.parentNodeId ??
+        defaultFolderOption?.id ??
+        folderOptions[0].id,
+      name: editedNode?.name ?? "",
     },
   });
   const { user } = useContext(UserContext);
   const userId = user!.userId;
   const { createNewFile, isLoading } = useCreateFile(userId);
+  const { updateNodeData } = useUpdateNode(userId);
 
   const onSubmit = (data: FileFormFields, e?: BaseSyntheticEvent) => {
     e?.preventDefault();
+    if (editedNode) {
+      updateNodeData({
+        name: data.name,
+        parentNodeId: data.parentNodeId,
+        userId,
+        nodeId: editedNode.nodeId,
+      });
+      return;
+    }
     if (!data.file) {
       return;
     }
@@ -65,23 +85,28 @@ export default function FileForm({
     createNewFile(dataToSend);
   };
 
+  const isEditMode = !!editedNode;
+  const headerText = isEditMode ? "Edit file" : "Create new file";
+
   return (
     <form
       className="transparent-background flex flex-col gap-5"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h2 className="text-2xl font-medium">Create new file</h2>
+      <h2 className="text-2xl font-medium">{headerText}</h2>
       <Input error={errors["name"]} label="Name" {...register("name")} />
       <Select
         label="Parent folder"
         {...register("parentNodeId")}
         options={folderOptions}
       />
-      <FileInput
-        error={errors["file"] as FieldError}
-        {...register("file")}
-        label="File"
-      />
+      {!editedNode && (
+        <FileInput
+          error={errors["file"] as FieldError}
+          {...register("file")}
+          label="File"
+        />
+      )}
       <Button
         isLoading={isLoading || isLoading}
         disabled={!isValid}

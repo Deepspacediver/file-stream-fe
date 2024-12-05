@@ -4,7 +4,7 @@ import CloseIcon from "@/assets/icons/close-icon.svg?react";
 import clsx from "clsx";
 import Select from "@components/select";
 import { CreateNodeOptions } from "@/constants/select-options";
-import { NodeTypes } from "@/types/node-types";
+import { EditNodeCell, NodeTypes } from "@/types/node-types";
 import FolderForm from "@components/folder-form";
 import FileForm from "@components/file-form";
 import { useGetUserFolders } from "@/api/queries/users-queries";
@@ -12,14 +12,23 @@ import { UserContext } from "@/contexts/user-context";
 import { transformFolderToOptions } from "@/helpers/transform-options";
 import { useParams } from "react-router-dom";
 
-type CreateNodeModalProps = { className?: string; closeModal: () => void };
+type CreateNodeModalProps = {
+  onClose?: () => void;
+  className?: string;
+  closeModal: () => void;
+  editedNode: EditNodeCell | null;
+};
 
 const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
-  function CreatNodeModal({ className, closeModal }, ref) {
+  function CreatNodeModal({ className, closeModal, onClose, editedNode }, ref) {
     const [resourceType, setResourceType] = useState<NodeTypes>(
       NodeTypes.FOLDER
     );
-    const isFolderResource = resourceType === NodeTypes.FOLDER;
+
+    const isEditMode = !!editedNode;
+    const isFolderResource = isEditMode
+      ? editedNode.type === NodeTypes.FOLDER
+      : resourceType === NodeTypes.FOLDER;
 
     const { user } = useContext(UserContext);
     const { folders, isLoading } = useGetUserFolders(user?.userId);
@@ -34,6 +43,11 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
 
     return (
       <dialog
+        onClose={() => {
+          if (onClose) {
+            onClose();
+          }
+        }}
         id="modal"
         className={clsx(
           `rounded-xl text-col-white bg-gradient-vertical backdrop:bg-black/50 
@@ -51,26 +65,30 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
           >
             <CloseIcon className="w-6 h-6 text-col-white " />
           </Button>
-          <Select
-            wrapperClassName="mb-5"
-            labelClassName="text-2xl font-medium inline-block mb-3"
-            label="Type of resource"
-            options={CreateNodeOptions}
-            onChange={(e) => {
-              setResourceType(e.currentTarget.value as NodeTypes);
-            }}
-          />
+          {!isEditMode && (
+            <Select
+              wrapperClassName="mb-5"
+              labelClassName="text-2xl font-medium inline-block mb-3"
+              label="Type of resource"
+              options={CreateNodeOptions}
+              onChange={(e) => {
+                setResourceType(e.currentTarget.value as NodeTypes);
+              }}
+            />
+          )}
         </div>
         {isLoading && <div>Loading...</div>}
         {isFolderResource
           ? !isLoading && (
               <FolderForm
+                editedNode={editedNode}
                 folderOptions={folderOptions}
                 defaultFolderOption={defaultFolderOption}
               />
             )
           : !isLoading && (
               <FileForm
+                editedNode={editedNode}
                 folderOptions={folderOptions}
                 defaultFolderOption={defaultFolderOption}
               />
