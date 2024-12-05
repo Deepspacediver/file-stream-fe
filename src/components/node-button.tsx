@@ -5,17 +5,16 @@ import CreateNodeModal from "./create-node-modal";
 import { useRef } from "react";
 
 export default function NodeButton() {
-  const modalRef = useRef<HTMLDialogElement>(null);
+  const nodeModalRef = useRef<HTMLDialogElement>(null);
 
   const closeModal = () => {
-    if (modalRef.current) {
-      modalRef.current.close();
+    if (nodeModalRef.current) {
+      nodeModalRef.current.close();
     }
   };
-
   const openModal = () => {
-    if (modalRef.current) {
-      modalRef.current.showModal();
+    if (nodeModalRef.current) {
+      nodeModalRef.current.showModal();
     }
   };
 
@@ -37,7 +36,7 @@ export default function NodeButton() {
         <AddFolderIcon className="w-10 h-10 lg:w-8 lg:h-8" />
         <span className="hidden lg:inline-block">Add Resource</span>
       </Button>
-      <CreateNodeModal ref={modalRef} closeModal={closeModal} />
+      <CreateNodeModal ref={nodeModalRef} closeModal={closeModal} />
     </>
   );
 }

@@ -1,7 +1,6 @@
 import { forwardRef, useContext, useState } from "react";
 import Button from "@components/button";
 import CloseIcon from "@/assets/icons/close-icon.svg?react";
-import clsx from "clsx";
 import Select from "@components/select";
 import { CreateNodeOptions } from "@/constants/select-options";
 import { EditNodeCell, NodeTypes } from "@/types/node-types";
@@ -11,16 +10,16 @@ import { useGetUserFolders } from "@/api/queries/users-queries";
 import { UserContext } from "@/contexts/user-context";
 import { transformFolderToOptions } from "@/helpers/transform-options";
 import { useParams } from "react-router-dom";
+import Modal from "./modal";
 
 type CreateNodeModalProps = {
   onClose?: () => void;
-  className?: string;
   closeModal: () => void;
-  editedNode: EditNodeCell | null;
+  editedNode?: EditNodeCell | null;
 };
 
 const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
-  function CreatNodeModal({ className, closeModal, onClose, editedNode }, ref) {
+  function CreatNodeModal({ closeModal, onClose, editedNode }, ref) {
     const [resourceType, setResourceType] = useState<NodeTypes>(
       NodeTypes.FOLDER
     );
@@ -42,19 +41,11 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
       : null;
 
     return (
-      <dialog
-        onClose={() => {
-          if (onClose) {
-            onClose();
-          }
-        }}
-        id="modal"
-        className={clsx(
-          `rounded-xl text-col-white bg-gradient-vertical backdrop:bg-black/50 
-          backdrop:backdrop-blur-md m-auto px-5 py-4 sm:py-8 sm:px-9 w-10/12 max-w-xl`,
-          className
-        )}
+      <Modal
+        className={`rounded-xl text-col-white bg-gradient-vertical backdrop:bg-black/50 
+    backdrop:backdrop-blur-md m-auto px-5 py-4 sm:py-8 sm:px-9 w-10/12 max-w-xl`}
         ref={ref}
+        onClose={onClose}
       >
         <div className="flex flex-col">
           <Button
@@ -93,7 +84,7 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
                 defaultFolderOption={defaultFolderOption}
               />
             )}
-      </dialog>
+      </Modal>
     );
   }
 );
