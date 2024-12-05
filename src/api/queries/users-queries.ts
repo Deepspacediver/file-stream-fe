@@ -6,6 +6,7 @@ import {
   getUserFolders,
   getUserFolderTree,
   registerUser,
+  updateNode,
 } from "../services/users-services";
 import { useNavigate } from "react-router-dom";
 import { setIsLogged } from "@/helpers/local-storage-helpers";
@@ -79,6 +80,23 @@ export const useCreateFile = (userId: number) => {
 
   return {
     createNewFile,
+    isLoading,
+  };
+};
+
+export const useUpdateNode = (userId: number) => {
+  const queryClient = useQueryClient();
+  const { mutate: updateNodeData, isPending: isLoading } = useMutation({
+    mutationFn: updateNode,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [FILES_KEY, FOLDERS_KEY, userId],
+      });
+    },
+  });
+
+  return {
+    updateNodeData,
     isLoading,
   };
 };

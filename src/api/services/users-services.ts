@@ -1,6 +1,7 @@
 import axiosClient from "@/lib/axios-client";
 import {
   CreateFile,
+  EditNodeRequest,
   FolderContentRequest,
   FolderContentResponse,
   FolderTree,
@@ -72,6 +73,23 @@ export const getFolderContent = async ({
 }: FolderContentRequest) => {
   const { data } = await axiosClient.get<FolderContentResponse>(
     `${UserRoutes.USERS}/${userId}${UserRoutes.USER_FOLDERS}/${nodeId}`
+  );
+
+  return data;
+};
+
+export const updateNode = async ({
+  nodeId,
+  name,
+  parentNodeId,
+  userId,
+}: EditNodeRequest) => {
+  const { data } = await axiosClient.post(
+    `${UserRoutes.USERS}/${userId}${UserRoutes.NODES}/${nodeId}`,
+    {
+      parentNodeId,
+      name,
+    }
   );
 
   return data;

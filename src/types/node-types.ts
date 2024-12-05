@@ -57,3 +57,8 @@ export type EditNodeCell = Pick<
   NodeObject,
   "nodeId" | "parentNodeId" | "type" | "name"
 >;
+
+export type EditNodeRequest = Pick<
+  NodeObject,
+  "userId" | "parentNodeId" | "name" | "nodeId"
+>;
