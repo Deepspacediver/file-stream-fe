@@ -52,3 +52,15 @@ export type FolderContentResponse = {
   name: string;
   content: FolderContent[];
 };
+
+export type EditNodeCell = Pick<
+  NodeObject,
+  "nodeId" | "parentNodeId" | "type" | "name"
+>;
+
+export type EditNodeRequest = Pick<
+  NodeObject,
+  "userId" | "parentNodeId" | "name" | "nodeId"
+>;
+
+export type DeleteNodeRequest = Pick<NodeObject, "userId" | "nodeId">;

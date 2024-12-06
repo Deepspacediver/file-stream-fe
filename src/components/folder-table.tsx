@@ -1,5 +1,5 @@
 import { capitalizeString } from "@/helpers/string-helpers";
-import { FolderContent, NodeTypes } from "@/types/node-types";
+import { EditNodeCell, FolderContent, NodeTypes } from "@/types/node-types";
 import {
   createColumnHelper,
   flexRender,
@@ -9,24 +9,64 @@ import {
   getSortedRowModel,
 } from "@tanstack/react-table";
 import FolderIcon from "@/assets/icons/folder-white-outline.svg?react";
+import EditPen from "@/assets/icons/edit-pen.svg?react";
+import TrashBin from "@/assets/icons/trash-can.svg?react";
 import FileIcon from "@/assets/icons/file-icon.svg?react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import CopyText from "./copy-text";
+import CreateNodeModal from "./create-node-modal";
+import DeleteNodeModal from "./delete-node-modal";
 
 type FolderTableProps = {
   folderContent: FolderContent[];
+  folderId: number;
 };
 
-export default function FolderTable({ folderContent }: FolderTableProps) {
+export default function FolderTable({
+  folderContent,
+  folderId,
+}: FolderTableProps) {
   const navigate = useNavigate();
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [editedNode, setEditedNode] = useState<EditNodeCell | null>(null);
+  const [nodeIdToBeDeleted, setNodeIdToBeDeleted] = useState<number | null>(
+    null
+  );
+  const nodeModalRef = useRef<HTMLDialogElement>(null);
+  const deleteModalRef = useRef<HTMLDialogElement>(null);
+
+  const closeNodeModal = () => {
+    if (nodeModalRef.current) {
+      nodeModalRef.current.close();
+    }
+  };
+
+  const openNodeModal = () => {
+    if (nodeModalRef.current) {
+      nodeModalRef.current.showModal();
+    }
+  };
+
+  const openDeleteModal = () => {
+    if (deleteModalRef.current) {
+      deleteModalRef.current.showModal();
+    }
+  };
+
+  const closeDeleteModal = () => {
+    if (deleteModalRef.current) {
+      deleteModalRef.current.close();
+    }
+  };
+
   const columnHelper = createColumnHelper<FolderContent>();
   const columns = useMemo(
     () => [
       columnHelper.accessor("name", {
         header: "Name",
+        size: 300,
         cell: ({ row, getValue }) => {
           const cellData = getValue();
           const isFolder = row.original.type === NodeTypes.FOLDER;
@@ -58,8 +98,53 @@ export default function FolderTable({ folderContent }: FolderTableProps) {
           return <CopyText text={cellData ?? folderLink} />;
         },
       }),
+      columnHelper.display({
+        id: "Edit",
+        header: "Edit",
+        enableResizing: false,
+        maxSize: 20,
+        cell: (cell) => {
+          const data = cell.row.original;
+          const cellNode = {
+            nodeId: data.nodeId,
+            name: data.name,
+            type: data.type,
+            parentNodeId: folderId,
+          };
+          return (
+            <EditPen
+              className="min-w-6 min-h-6 h-6 w-6 mx-auto"
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditedNode(cellNode);
+                openNodeModal();
+              }}
+            />
+          );
+        },
+      }),
+      columnHelper.display({
+        id: "Delete",
+        header: "Delete",
+        enableResizing: false,
+        maxSize: 20,
+        cell: (cell) => {
+          const data = cell.row.original;
+          const nodeId = data.nodeId;
+          return (
+            <TrashBin
+              className="min-w-6 min-h-6 h-6 w-6 mx-auto"
+              onClick={(e) => {
+                e.stopPropagation();
+                openDeleteModal();
+                setNodeIdToBeDeleted(nodeId);
+              }}
+            />
+          );
+        },
+      }),
     ],
-    [columnHelper]
+    [columnHelper, folderId]
   );
 
   const table = useReactTable({
@@ -74,70 +159,95 @@ export default function FolderTable({ folderContent }: FolderTableProps) {
   });
 
   return (
-    <table className="w-full ">
-      <thead>
-        {table.getHeaderGroups().map((headerGroup) => {
-          return (
-            <tr key={headerGroup.id} className=" border-b-2 border-gray-300">
-              {headerGroup.headers.map((header) => {
-                return (
-                  <th
-                    onClick={header.column.getToggleSortingHandler()}
-                    className={`p-2 relative ${
-                      header.column.getCanSort() && "hover:cursor-pointer"
-                    }`}
-                    key={header.id}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    <span className="absolute ml-2 bottom-1 text-lg">
-                      {{
-                        asc: "  \u2191",
-                        desc: "  \u2193",
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </span>
-                  </th>
-                );
-              })}
-            </tr>
-          );
-        })}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map((row) => {
-          return (
-            <tr
-              key={row.id}
-              className={clsx(
-                "border-b-2 border-gray-300 focus:bg-col-black ",
-                "cursor-pointer hover:bg-gray-200"
-              )}
-              onClick={() => {
-                if (row.original.type === NodeTypes.FOLDER) {
-                  navigate(`/folders/${row.original.nodeId}`);
-                  return;
-                }
-                const fileLink = row.original.fileLink;
-                if (fileLink) {
-                  window.open(fileLink, "_blank");
-                }
-              }}
-            >
-              {row.getVisibleCells().map((cell) => {
-                return (
-                  <td className="text-center p-2" key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                );
-              })}
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <>
+      <DeleteNodeModal
+        key={"delete-node-modal"}
+        closeModal={closeDeleteModal}
+        ref={deleteModalRef}
+        nodeId={nodeIdToBeDeleted}
+        onClose={() => setNodeIdToBeDeleted(null)}
+      />
+      <CreateNodeModal
+        key={"create-node-modal"}
+        editedNode={editedNode}
+        ref={nodeModalRef}
+        closeModal={closeNodeModal}
+        onClose={() => {
+          setEditedNode(null);
+        }}
+      />
+
+      <table className="w-full ">
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => {
+            return (
+              <tr key={headerGroup.id} className=" border-b-2 border-gray-300">
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <th
+                      style={{
+                        width: header.getSize(),
+                      }}
+                      onClick={header.column.getToggleSortingHandler()}
+                      className={`p-2 relative ${
+                        header.column.getCanSort() && "hover:cursor-pointer"
+                      }`}
+                      key={header.id}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      <span className="absolute ml-2 bottom-1 text-lg">
+                        {{
+                          asc: "  \u2191",
+                          desc: "  \u2193",
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </span>
+                    </th>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => {
+            return (
+              <tr
+                key={row.id}
+                className={clsx(
+                  "border-b-2 border-gray-300 focus:bg-col-black ",
+                  "cursor-pointer hover:bg-gray-200"
+                )}
+                onClick={() => {
+                  if (row.original.type === NodeTypes.FOLDER) {
+                    navigate(`/folders/${row.original.nodeId}`);
+                    return;
+                  }
+                  const fileLink = row.original.fileLink;
+                  if (fileLink) {
+                    window.open(fileLink, "_blank");
+                  }
+                }}
+              >
+                {row.getVisibleCells().map((cell) => {
+                  return (
+                    <td className="text-center p-2" key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </>
   );
 }

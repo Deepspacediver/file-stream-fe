@@ -2,10 +2,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFile,
   createFolder,
+  deleteNode,
   getFolderContent,
   getUserFolders,
   getUserFolderTree,
   registerUser,
+  updateNode,
 } from "../services/users-services";
 import { useNavigate } from "react-router-dom";
 import { setIsLogged } from "@/helpers/local-storage-helpers";
@@ -83,6 +85,23 @@ export const useCreateFile = (userId: number) => {
   };
 };
 
+export const useUpdateNode = (userId: number) => {
+  const queryClient = useQueryClient();
+  const { mutate: updateNodeData, isPending: isLoading } = useMutation({
+    mutationFn: updateNode,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [FILES_KEY, FOLDERS_KEY, userId],
+      });
+    },
+  });
+
+  return {
+    updateNodeData,
+    isLoading,
+  };
+};
+
 export const useGetUserFolderTree = (userId?: number) => {
   const { data: folderTree, isLoading } = useQuery({
     queryKey: [FOLDER_TREE_KEY, userId],
@@ -104,6 +123,26 @@ export const useGetFolderContent = ({
 
   return {
     folderWithContent,
+    isLoading,
+  };
+};
+
+export const useDeleteNode = (userId?: number, callback?: () => void) => {
+  const queryClient = useQueryClient();
+  const { mutate: removeNode, isPending: isLoading } = useMutation({
+    mutationFn: deleteNode,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [FILES_KEY, FOLDERS_KEY, userId],
+      });
+      if (callback) {
+        callback();
+      }
+    },
+  });
+
+  return {
+    removeNode,
     isLoading,
   };
 };

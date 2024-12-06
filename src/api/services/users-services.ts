@@ -1,6 +1,8 @@
 import axiosClient from "@/lib/axios-client";
 import {
   CreateFile,
+  DeleteNodeRequest,
+  EditNodeRequest,
   FolderContentRequest,
   FolderContentResponse,
   FolderTree,
@@ -75,4 +77,27 @@ export const getFolderContent = async ({
   );
 
   return data;
+};
+
+export const updateNode = async ({
+  nodeId,
+  name,
+  parentNodeId,
+  userId,
+}: EditNodeRequest) => {
+  const { data } = await axiosClient.post(
+    `${UserRoutes.USERS}/${userId}${UserRoutes.NODES}/${nodeId}`,
+    {
+      parentNodeId,
+      name,
+    }
+  );
+
+  return data;
+};
+
+export const deleteNode = async ({ nodeId, userId }: DeleteNodeRequest) => {
+  await axiosClient.delete(
+    `${UserRoutes.USERS}/${userId}${UserRoutes.NODES}/${nodeId}`
+  );
 };

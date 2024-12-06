@@ -7,8 +7,13 @@ import { z } from "zod";
 import Button from "./button";
 import Select from "./select";
 import { UserContext } from "@/contexts/user-context";
-import { useCreateFolder } from "@/api/queries/users-queries";
-import { CreateFolder, FolderOption, NodeTypes } from "@/types/node-types";
+import { useCreateFolder, useUpdateNode } from "@/api/queries/users-queries";
+import {
+  CreateFolder,
+  EditNodeCell,
+  FolderOption,
+  NodeTypes,
+} from "@/types/node-types";
 import { ButtonVariants } from "@/constants/button-variants";
 
 export const CreateFolderSchema = z.object({
@@ -24,11 +29,13 @@ type CreateFolderForm = z.infer<typeof CreateFolderSchema>;
 type FolderFormProps = {
   folderOptions: FolderOption[];
   defaultFolderOption: FolderOption | null;
+  editedNode?: EditNodeCell | null;
 };
 
 export default function FolderForm({
   folderOptions,
   defaultFolderOption,
+  editedNode,
 }: FolderFormProps) {
   const {
     register,
@@ -38,15 +45,35 @@ export default function FolderForm({
     mode: "all",
     resolver: zodResolver(CreateFolderSchema),
     values: {
-      name: "",
-      parentNodeId: defaultFolderOption?.id ?? folderOptions[0].id,
+      name: editedNode?.name ?? "",
+      parentNodeId:
+        editedNode?.parentNodeId ??
+        defaultFolderOption?.id ??
+        folderOptions[0].id,
     },
   });
   const { user } = useContext(UserContext);
   const userId = user!.userId;
   const { createNewFolder, isLoading } = useCreateFolder(userId);
+  const { updateNodeData } = useUpdateNode(userId);
+
+  const isEditMode = !!editedNode;
+
+  const curatedFolderOptions = !isEditMode
+    ? folderOptions
+    : folderOptions.filter(({ id }) => id !== editedNode.nodeId);
 
   const onSubmit = (data: CreateFolderForm, e?: BaseSyntheticEvent) => {
+    if (isEditMode) {
+      updateNodeData({
+        name: data.name,
+        parentNodeId: data.parentNodeId,
+        userId,
+        nodeId: editedNode.nodeId,
+      });
+      return;
+    }
+
     e?.preventDefault();
     const dataToSend: CreateFolder = {
       ...data,
@@ -55,17 +82,18 @@ export default function FolderForm({
     };
     createNewFolder(dataToSend);
   };
+  const headerText = isEditMode ? "Edit folder" : "Create new folder";
 
   return (
     <form
       className="transparent-background flex flex-col gap-5"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h2 className="text-2xl font-medium">Create new folder</h2>
+      <h2 className="text-2xl font-medium">{headerText}</h2>
       <Input error={errors["name"]} label="Name" {...register("name")} />
       <Select
         label="Parent folder"
-        options={folderOptions}
+        options={curatedFolderOptions}
         {...register("parentNodeId")}
         error={errors["parentNodeId"]}
       />
