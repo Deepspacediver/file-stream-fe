@@ -10,12 +10,14 @@ import {
 } from "@tanstack/react-table";
 import FolderIcon from "@/assets/icons/folder-white-outline.svg?react";
 import EditPen from "@/assets/icons/edit-pen.svg?react";
+import TrashBin from "@/assets/icons/trash-can.svg?react";
 import FileIcon from "@/assets/icons/file-icon.svg?react";
 import { useMemo, useRef, useState } from "react";
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import CopyText from "./copy-text";
 import CreateNodeModal from "./create-node-modal";
+import DeleteNodeModal from "./delete-node-modal";
 
 type FolderTableProps = {
   folderContent: FolderContent[];
@@ -29,17 +31,33 @@ export default function FolderTable({
   const navigate = useNavigate();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [editedNode, setEditedNode] = useState<EditNodeCell | null>(null);
-  const modalRef = useRef<HTMLDialogElement>(null);
+  const [nodeIdToBeDeleted, setNodeIdToBeDeleted] = useState<number | null>(
+    null
+  );
+  const nodeModalRef = useRef<HTMLDialogElement>(null);
+  const deleteModalRef = useRef<HTMLDialogElement>(null);
 
-  const closeModal = () => {
-    if (modalRef.current) {
-      modalRef.current.close();
+  const closeNodeModal = () => {
+    if (nodeModalRef.current) {
+      nodeModalRef.current.close();
     }
   };
 
-  const openModal = () => {
-    if (modalRef.current) {
-      modalRef.current.showModal();
+  const openNodeModal = () => {
+    if (nodeModalRef.current) {
+      nodeModalRef.current.showModal();
+    }
+  };
+
+  const openDeleteModal = () => {
+    if (deleteModalRef.current) {
+      deleteModalRef.current.showModal();
+    }
+  };
+
+  const closeDeleteModal = () => {
+    if (deleteModalRef.current) {
+      deleteModalRef.current.close();
     }
   };
 
@@ -99,7 +117,27 @@ export default function FolderTable({
               onClick={(e) => {
                 e.stopPropagation();
                 setEditedNode(cellNode);
-                openModal();
+                openNodeModal();
+              }}
+            />
+          );
+        },
+      }),
+      columnHelper.display({
+        id: "Delete",
+        header: "Delete",
+        enableResizing: false,
+        maxSize: 20,
+        cell: (cell) => {
+          const data = cell.row.original;
+          const nodeId = data.nodeId;
+          return (
+            <TrashBin
+              className="min-w-6 min-h-6 h-6 w-6 mx-auto"
+              onClick={(e) => {
+                e.stopPropagation();
+                openDeleteModal();
+                setNodeIdToBeDeleted(nodeId);
               }}
             />
           );
@@ -122,14 +160,23 @@ export default function FolderTable({
 
   return (
     <>
+      <DeleteNodeModal
+        key={"delete-node-modal"}
+        closeModal={closeDeleteModal}
+        ref={deleteModalRef}
+        nodeId={nodeIdToBeDeleted}
+        onClose={() => setNodeIdToBeDeleted(null)}
+      />
       <CreateNodeModal
+        key={"create-node-modal"}
         editedNode={editedNode}
-        ref={modalRef}
-        closeModal={closeModal}
+        ref={nodeModalRef}
+        closeModal={closeNodeModal}
         onClose={() => {
           setEditedNode(null);
         }}
       />
+
       <table className="w-full ">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => {
