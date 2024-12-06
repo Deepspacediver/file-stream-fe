@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFile,
   createFolder,
+  deleteNode,
   getFolderContent,
   getUserFolders,
   getUserFolderTree,
@@ -122,6 +123,26 @@ export const useGetFolderContent = ({
 
   return {
     folderWithContent,
+    isLoading,
+  };
+};
+
+export const useDeleteNode = (userId?: number, callback?: () => void) => {
+  const queryClient = useQueryClient();
+  const { mutate: removeNode, isPending: isLoading } = useMutation({
+    mutationFn: deleteNode,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [FILES_KEY, FOLDERS_KEY, userId],
+      });
+      if (callback) {
+        callback();
+      }
+    },
+  });
+
+  return {
+    removeNode,
     isLoading,
   };
 };

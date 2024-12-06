@@ -62,3 +62,5 @@ export type EditNodeRequest = Pick<
   NodeObject,
   "userId" | "parentNodeId" | "name" | "nodeId"
 >;
+
+export type DeleteNodeRequest = Pick<NodeObject, "userId" | "nodeId">;
