@@ -85,7 +85,7 @@ export const updateNode = async ({
   parentNodeId,
   userId,
 }: EditNodeRequest) => {
-  const { data } = await axiosClient.post(
+  const { data } = await axiosClient.put(
     `${UserRoutes.USERS}/${userId}${UserRoutes.NODES}/${nodeId}`,
     {
       parentNodeId,
