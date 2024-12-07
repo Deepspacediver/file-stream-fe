@@ -12,54 +12,28 @@ import FolderIcon from "@/assets/icons/folder-white-outline.svg?react";
 import EditPen from "@/assets/icons/edit-pen.svg?react";
 import TrashBin from "@/assets/icons/trash-can.svg?react";
 import FileIcon from "@/assets/icons/file-icon.svg?react";
-import { useMemo, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import CopyText from "./copy-text";
-import CreateNodeModal from "./create-node-modal";
-import DeleteNodeModal from "./delete-node-modal";
 
 type FolderTableProps = {
   folderContent: FolderContent[];
-  folderId: number;
+  setNodeIdToBeDeleted: Dispatch<SetStateAction<number | null>>;
+  setEditedNode: Dispatch<SetStateAction<EditNodeCell | null>>;
+  openDeleteModal: () => void;
+  openNodeModal: () => void;
 };
 
 export default function FolderTable({
   folderContent,
-  folderId,
+  openDeleteModal,
+  openNodeModal,
+  setNodeIdToBeDeleted,
+  setEditedNode,
 }: FolderTableProps) {
   const navigate = useNavigate();
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [editedNode, setEditedNode] = useState<EditNodeCell | null>(null);
-  const [nodeIdToBeDeleted, setNodeIdToBeDeleted] = useState<number | null>(
-    null
-  );
-  const nodeModalRef = useRef<HTMLDialogElement>(null);
-  const deleteModalRef = useRef<HTMLDialogElement>(null);
-
-  const closeNodeModal = () => {
-    if (nodeModalRef.current) {
-      nodeModalRef.current.close();
-    }
-  };
-
-  const openNodeModal = () => {
-    if (nodeModalRef.current) {
-      nodeModalRef.current.showModal();
-    }
-  };
-
-  const openDeleteModal = () => {
-    if (deleteModalRef.current) {
-      deleteModalRef.current.showModal();
-    }
-  };
-
-  const closeDeleteModal = () => {
-    if (deleteModalRef.current) {
-      deleteModalRef.current.close();
-    }
-  };
 
   const columnHelper = createColumnHelper<FolderContent>();
   const columns = useMemo(
@@ -109,7 +83,7 @@ export default function FolderTable({
             nodeId: data.nodeId,
             name: data.name,
             type: data.type,
-            parentNodeId: folderId,
+            parentNodeId: data.parentNodeId,
           };
           return (
             <EditPen
@@ -144,7 +118,13 @@ export default function FolderTable({
         },
       }),
     ],
-    [columnHelper, folderId]
+    [
+      columnHelper,
+      openDeleteModal,
+      openNodeModal,
+      setEditedNode,
+      setNodeIdToBeDeleted,
+    ]
   );
 
   const table = useReactTable({
@@ -160,23 +140,6 @@ export default function FolderTable({
 
   return (
     <>
-      <DeleteNodeModal
-        key={"delete-node-modal"}
-        closeModal={closeDeleteModal}
-        ref={deleteModalRef}
-        nodeId={nodeIdToBeDeleted}
-        onClose={() => setNodeIdToBeDeleted(null)}
-      />
-      <CreateNodeModal
-        key={"create-node-modal"}
-        editedNode={editedNode}
-        ref={nodeModalRef}
-        closeModal={closeNodeModal}
-        onClose={() => {
-          setEditedNode(null);
-        }}
-      />
-
       <table className="w-full ">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => {
