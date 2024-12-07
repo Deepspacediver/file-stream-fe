@@ -45,11 +45,15 @@ export type FolderContentRequest = {
 
 export type FolderContent = Pick<
   NodeObject,
-  "nodeId" | "fileLink" | "type" | "name"
+  "nodeId" | "fileLink" | "type" | "name" | "parentNodeId"
 >;
 
 export type FolderContentResponse = {
   name: string;
+  userId: number;
+  parentNodeId: number | null;
+  nodeId: number;
+
   content: FolderContent[];
 };
 
