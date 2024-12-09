@@ -68,3 +68,11 @@ export type EditNodeRequest = Pick<
 >;
 
 export type DeleteNodeRequest = Pick<NodeObject, "userId" | "nodeId">;
+
+export type ShareNodeRequest = Pick<NodeObject, "userId" | "nodeId"> & {
+  expiryDate: Date;
+};
+
+export type ShareNodeResponse = {
+  link: string;
+};
