@@ -1,5 +1,10 @@
 import { capitalizeString } from "@/helpers/string-helpers";
-import { EditNodeCell, FolderContent, NodeTypes } from "@/types/node-types";
+import {
+  EditNodeCell,
+  FolderContent,
+  NodeToBeDeleted,
+  NodeTypes,
+} from "@/types/node-types";
 import {
   createColumnHelper,
   flexRender,
@@ -19,7 +24,7 @@ import CopyText from "./copy-text";
 
 type FolderTableProps = {
   folderContent: FolderContent[];
-  setNodeIdToBeDeleted: Dispatch<SetStateAction<number | null>>;
+  setNodeToBeDeleted: Dispatch<NodeToBeDeleted>;
   setEditedNode: Dispatch<SetStateAction<EditNodeCell | null>>;
   openDeleteModal: () => void;
   openNodeModal: () => void;
@@ -29,7 +34,7 @@ export default function FolderTable({
   folderContent,
   openDeleteModal,
   openNodeModal,
-  setNodeIdToBeDeleted,
+  setNodeToBeDeleted,
   setEditedNode,
 }: FolderTableProps) {
   const navigate = useNavigate();
@@ -111,7 +116,7 @@ export default function FolderTable({
               onClick={(e) => {
                 e.stopPropagation();
                 openDeleteModal();
-                setNodeIdToBeDeleted(nodeId);
+                setNodeToBeDeleted({ nodeId, isDeletingFromItsView: false });
               }}
             />
           );
@@ -123,7 +128,7 @@ export default function FolderTable({
       openDeleteModal,
       openNodeModal,
       setEditedNode,
-      setNodeIdToBeDeleted,
+      setNodeToBeDeleted,
     ]
   );
 

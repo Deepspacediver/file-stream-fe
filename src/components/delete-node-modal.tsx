@@ -4,18 +4,31 @@ import Button from "./button";
 import { UserContext } from "@/contexts/user-context";
 import { useDeleteNode } from "@/api/queries/users-queries";
 import { ButtonVariants } from "@/constants/button-variants";
+import { useNavigate } from "react-router-dom";
 
 type DeleteNodeModalProps = {
   onClose?: () => void;
   closeModal: () => void;
-  nodeId: number | null;
+  nodeToBeDeleted: {
+    nodeId: number;
+    isDeletingFromItsView: boolean;
+  } | null;
 };
 
 const DeleteNodeModal = forwardRef<HTMLDialogElement, DeleteNodeModalProps>(
-  function DeleteNodeModal({ onClose, closeModal, nodeId }, ref) {
+  function DeleteNodeModal({ onClose, closeModal, nodeToBeDeleted }, ref) {
     const { user } = useContext(UserContext);
     const userId = user?.userId;
-    const { removeNode } = useDeleteNode(userId, closeModal);
+    const navigate = useNavigate();
+    const nodeId = nodeToBeDeleted?.nodeId;
+    const onSuccessfulDeletion = () => {
+      if (nodeToBeDeleted?.isDeletingFromItsView) {
+        navigate("/");
+        return;
+      }
+      closeModal();
+    };
+    const { removeNode } = useDeleteNode(userId, onSuccessfulDeletion);
     return (
       <Modal
         id="delete-node-modal"
