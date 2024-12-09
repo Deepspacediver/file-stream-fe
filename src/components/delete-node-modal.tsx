@@ -3,6 +3,7 @@ import Modal from "./modal";
 import Button from "./button";
 import { UserContext } from "@/contexts/user-context";
 import { useDeleteNode } from "@/api/queries/users-queries";
+import { ButtonVariants } from "@/constants/button-variants";
 
 type DeleteNodeModalProps = {
   onClose?: () => void;
@@ -24,10 +25,11 @@ const DeleteNodeModal = forwardRef<HTMLDialogElement, DeleteNodeModalProps>(
       >
         {nodeId ? (
           <div className="flex flex-col gap-4">
-            <h3 className="text-xl">
+            <h3 className="text-2xl font-medium">
               Are you sure you want to delete this resource?
             </h3>
             <Button
+              variant={ButtonVariants.SUBMIT}
               onClick={() => {
                 if (userId) {
                   removeNode({ userId, nodeId });
