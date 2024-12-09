@@ -11,6 +11,7 @@ import DeleteNodeModal from "@/components/delete-node-modal";
 import CreateNodeModal from "@/components/create-node-modal";
 import { EditNodeCell, NodeTypes } from "@/types/node-types";
 import useDialog from "@/hooks/use-dialog";
+import ShareModal from "@/components/share-modal";
 
 export default function FolderView() {
   const [editedNode, setEditedNode] = useState<EditNodeCell | null>(null);
@@ -25,6 +26,7 @@ export default function FolderView() {
 
   const nodeModalRef = useRef<HTMLDialogElement>(null);
   const deleteModalRef = useRef<HTMLDialogElement>(null);
+  const shareModalRef = useRef<HTMLDialogElement>(null);
 
   const { openModal: openNodeModal, closeModal: closeNodeModal } = useDialog({
     dialogRef: nodeModalRef,
@@ -33,6 +35,10 @@ export default function FolderView() {
     useDialog({
       dialogRef: deleteModalRef,
     });
+
+  const { openModal: openShareModal, closeModal: closeShareModal } = useDialog({
+    dialogRef: shareModalRef,
+  });
 
   const { folderWithContent, isLoading } = useGetFolderContent({
     userId,
@@ -72,6 +78,13 @@ export default function FolderView() {
           setEditedNode(null);
         }}
       />
+      {nodeId && (
+        <ShareModal
+          closeModal={closeShareModal}
+          nodeId={nodeId}
+          ref={shareModalRef}
+        />
+      )}
       <div className="flex items-center gap-4">
         <h2 className="text-3xl font-medium">{folderWithContent?.name}</h2>
         <div className="flex gap-2">
@@ -93,7 +106,12 @@ export default function FolderView() {
               />
             </>
           )}
-          <ShareIcon className={iconStyles} />
+          <ShareIcon
+            className={iconStyles}
+            onClick={() => {
+              openShareModal();
+            }}
+          />
         </div>
       </div>
       {folderWithContent?.content.length && nodeId ? (
