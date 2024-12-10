@@ -76,3 +76,8 @@ export type ShareNodeRequest = Pick<NodeObject, "userId" | "nodeId"> & {
 export type ShareNodeResponse = {
   link: string;
 };
+
+export type NodeToBeDeleted = {
+  nodeId: number;
+  isDeletingFromItsView: boolean;
+} | null;

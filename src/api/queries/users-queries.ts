@@ -13,12 +13,12 @@ import { useNavigate } from "react-router-dom";
 import { setIsLogged } from "@/helpers/local-storage-helpers";
 import { useContext } from "react";
 import { UserContext } from "@/contexts/user-context";
-import { FolderContentRequest, UserFolderResponse } from "@/types/node-types";
+import { FolderContentRequest } from "@/types/node-types";
 
 const BASE_KEY = "users";
-const FOLDERS_KEY = "user_folders";
-const FILES_KEY = "user_files";
-const FOLDER_TREE_KEY = "user_folder_tree";
+const NODE_KEY = "nodes";
+const FOLDER_TREE_KEY = "folders_tree";
+const FOLDER_FLAT_KEY = "folders_flat";
 const FOLDER_CONTENT = "folder_content";
 
 export const useRegisterUser = () => {
@@ -41,7 +41,7 @@ export const useRegisterUser = () => {
 export const useGetUserFolders = (userId?: number) => {
   const { data: folders, isLoading } = useQuery({
     queryFn: () => getUserFolders(userId!),
-    queryKey: [FOLDERS_KEY, userId],
+    queryKey: [NODE_KEY, userId, FOLDER_FLAT_KEY],
   });
 
   return { folders, isLoading };
@@ -51,19 +51,8 @@ export const useCreateFolder = (userId: number) => {
   const queryClient = useQueryClient();
   const { mutate: createNewFolder, isPending: isLoading } = useMutation({
     mutationFn: createFolder,
-    onSuccess: (data) => {
-      const newFolder: UserFolderResponse = {
-        name: data.name,
-        nodeId: data.nodeId,
-        parentNodeId: data.parentNodeId,
-        userId: data.userId,
-      };
-      queryClient.setQueryData(
-        [FOLDERS_KEY, userId],
-        (oldData: UserFolderResponse[]) => {
-          return [...oldData, newFolder];
-        }
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [NODE_KEY, userId] });
     },
   });
 
@@ -75,7 +64,9 @@ export const useCreateFile = (userId: number) => {
   const { mutate: createNewFile, isPending: isLoading } = useMutation({
     mutationFn: createFile,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [FILES_KEY, userId] });
+      queryClient.invalidateQueries({
+        queryKey: [NODE_KEY, userId, FOLDER_CONTENT],
+      });
     },
   });
 
@@ -91,7 +82,7 @@ export const useUpdateNode = (userId: number) => {
     mutationFn: updateNode,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [FILES_KEY, FOLDERS_KEY, userId],
+        queryKey: [NODE_KEY, userId],
       });
     },
   });
@@ -104,7 +95,7 @@ export const useUpdateNode = (userId: number) => {
 
 export const useGetUserFolderTree = (userId?: number) => {
   const { data: folderTree, isLoading } = useQuery({
-    queryKey: [FOLDER_TREE_KEY, userId],
+    queryKey: [NODE_KEY, userId, FOLDER_TREE_KEY],
     queryFn: () => getUserFolderTree(userId!),
     enabled: !!userId,
   });
@@ -117,7 +108,7 @@ export const useGetFolderContent = ({
 }: FolderContentRequest) => {
   const { data: folderWithContent, isLoading } = useQuery({
     queryFn: () => getFolderContent({ userId, nodeId }),
-    queryKey: [FOLDER_CONTENT, nodeId, userId],
+    queryKey: [NODE_KEY, userId, FOLDER_CONTENT, nodeId],
     enabled: !!userId && !!nodeId,
   });
 
@@ -133,7 +124,7 @@ export const useDeleteNode = (userId?: number, callback?: () => void) => {
     mutationFn: deleteNode,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [FILES_KEY, FOLDERS_KEY, userId],
+        queryKey: [NODE_KEY, userId],
       });
       if (callback) {
         callback();

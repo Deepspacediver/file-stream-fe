@@ -9,15 +9,13 @@ import EditPen from "@/assets/icons/edit-pen.svg?react";
 import ShareIcon from "@/assets/icons/share-icon.svg?react";
 import DeleteNodeModal from "@/components/delete-node-modal";
 import CreateNodeModal from "@/components/create-node-modal";
-import { EditNodeCell, NodeTypes } from "@/types/node-types";
+import { EditNodeCell, NodeToBeDeleted, NodeTypes } from "@/types/node-types";
 import useDialog from "@/hooks/use-dialog";
 import ShareModal from "@/components/share-modal";
 
 export default function FolderView() {
   const [editedNode, setEditedNode] = useState<EditNodeCell | null>(null);
-  const [nodeIdToBeDeleted, setNodeIdToBeDeleted] = useState<number | null>(
-    null
-  );
+  const [nodeToBeDeleted, setNodeToBeDeleted] = useState<NodeToBeDeleted>(null);
   const params = useParams();
   const { folderId } = params;
   const { user } = useContext(UserContext);
@@ -66,8 +64,8 @@ export default function FolderView() {
         key={"delete-node-modal"}
         closeModal={closeDeleteModal}
         ref={deleteModalRef}
-        nodeId={nodeIdToBeDeleted}
-        onClose={() => setNodeIdToBeDeleted(null)}
+        nodeToBeDeleted={nodeToBeDeleted}
+        onClose={() => setNodeToBeDeleted(null)}
       />
       <CreateNodeModal
         key={"create-node-modal"}
@@ -100,7 +98,10 @@ export default function FolderView() {
               <TrashBin
                 className={iconStyles}
                 onClick={() => {
-                  setNodeIdToBeDeleted(currentFolder.nodeId);
+                  setNodeToBeDeleted({
+                    nodeId: currentFolder.nodeId,
+                    isDeletingFromItsView: true,
+                  });
                   openDeleteModal();
                 }}
               />
@@ -118,7 +119,7 @@ export default function FolderView() {
         <FolderTable
           setEditedNode={setEditedNode}
           openNodeModal={openNodeModal}
-          setNodeIdToBeDeleted={setNodeIdToBeDeleted}
+          setNodeToBeDeleted={setNodeToBeDeleted}
           openDeleteModal={openDeleteModal}
           folderContent={folderWithContent.content}
         />
