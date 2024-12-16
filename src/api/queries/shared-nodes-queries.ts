@@ -42,14 +42,14 @@ export const useGetSharedFolderTree = (
   linkHash?: string,
   isDisabled?: boolean
 ) => {
-  const { data: sharedFolderContent, isLoading } = useQuery({
+  const { data: sharedFolderTree, isLoading } = useQuery({
     enabled: !!linkHash || !!isDisabled,
     queryFn: () => getSharedFolderTree(linkHash!),
     queryKey: [SHARED_NODE_KEY, SHARED_NODE_TREE_KEY],
   });
 
   return {
-    sharedFolderContent,
+    sharedFolderTree,
     isLoading,
   };
 };
