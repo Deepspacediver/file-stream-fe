@@ -3,6 +3,7 @@ import CustomNavlink from "./custom-navlink";
 import CloseIcon from "@/assets/icons/close-icon.svg?react";
 import { FolderTree } from "@/types/node-types";
 import FolderTreeWrapper from "./folder-tree-wrapper";
+import { useParams } from "react-router-dom";
 
 type MobileMenuProps = {
   className?: string;
@@ -19,6 +20,7 @@ export default function MobileMenu({
   folderTree,
   sharedFolderTree,
 }: MobileMenuProps) {
+  const { hash } = useParams();
   return (
     <aside
       className={clsx(
@@ -40,7 +42,7 @@ export default function MobileMenu({
       </div>
       {folderTree && <FolderTreeWrapper folderTree={folderTree} />}
       {sharedFolderTree && (
-        <FolderTreeWrapper folderTree={sharedFolderTree} isShared />
+        <FolderTreeWrapper folderTree={sharedFolderTree} hash={hash} />
       )}
     </aside>
   );
