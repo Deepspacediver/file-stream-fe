@@ -56,7 +56,6 @@ export default function FolderView({
       : null;
 
   const iconStyles = "min-w-6 min-h-6 h-6 w-6 cursor-pointer";
-  console.log(folderWithContent);
   return (
     <div className="p-2 my-3">
       {!isShared && (

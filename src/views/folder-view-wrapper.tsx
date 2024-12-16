@@ -11,8 +11,6 @@ export default function FolderViewWrapper() {
   const sharedNodeId = sharedFolderId ? +sharedFolderId : null;
   const nodeId = folderId ? +folderId : null;
 
-  console.log({ hash, nodeId, sharedNodeId });
-
   const { user } = useContext(UserContext);
   const userId = user?.userId;
 
