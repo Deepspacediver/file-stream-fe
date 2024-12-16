@@ -28,6 +28,7 @@ type FolderTableProps = {
   setEditedNode: Dispatch<SetStateAction<EditNodeCell | null>>;
   openDeleteModal: () => void;
   openNodeModal: () => void;
+  isShared?: boolean;
 };
 
 export default function FolderTable({
@@ -36,6 +37,7 @@ export default function FolderTable({
   openNodeModal,
   setNodeToBeDeleted,
   setEditedNode,
+  isShared,
 }: FolderTableProps) {
   const navigate = useNavigate();
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -77,54 +79,66 @@ export default function FolderTable({
           return <CopyText text={cellData ?? folderLink} />;
         },
       }),
-      columnHelper.display({
-        id: "Edit",
-        header: "Edit",
-        enableResizing: false,
-        maxSize: 20,
-        cell: (cell) => {
-          const data = cell.row.original;
-          const cellNode = {
-            nodeId: data.nodeId,
-            name: data.name,
-            type: data.type,
-            parentNodeId: data.parentNodeId,
-          };
-          return (
-            <EditPen
-              className="min-w-6 min-h-6 h-6 w-6 mx-auto"
-              onClick={(e) => {
-                e.stopPropagation();
-                setEditedNode(cellNode);
-                openNodeModal();
-              }}
-            />
-          );
-        },
-      }),
-      columnHelper.display({
-        id: "Delete",
-        header: "Delete",
-        enableResizing: false,
-        maxSize: 20,
-        cell: (cell) => {
-          const data = cell.row.original;
-          const nodeId = data.nodeId;
-          return (
-            <TrashBin
-              className="min-w-6 min-h-6 h-6 w-6 mx-auto"
-              onClick={(e) => {
-                e.stopPropagation();
-                openDeleteModal();
-                setNodeToBeDeleted({ nodeId, isDeletingFromItsView: false });
-              }}
-            />
-          );
-        },
-      }),
+      ...(!isShared
+        ? [
+            columnHelper.display({
+              id: "Edit",
+              header: "Edit",
+              enableResizing: false,
+              maxSize: 20,
+              cell: (cell) => {
+                const data = cell.row.original;
+                const cellNode = {
+                  nodeId: data.nodeId,
+                  name: data.name,
+                  type: data.type,
+                  parentNodeId: data.parentNodeId,
+                };
+                return (
+                  <EditPen
+                    className="min-w-6 min-h-6 h-6 w-6 mx-auto"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditedNode(cellNode);
+                      openNodeModal();
+                    }}
+                  />
+                );
+              },
+            }),
+          ]
+        : []),
+      ...(!isShared
+        ? [
+            columnHelper.display({
+              id: "Delete",
+              header: "Delete",
+              enableResizing: false,
+              maxSize: 20,
+              cell: (cell) => {
+                const data = cell.row.original;
+                const nodeId = data.nodeId;
+                return (
+                  <TrashBin
+                    className="min-w-6 min-h-6 h-6 w-6 mx-auto"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDeleteModal();
+                      setNodeToBeDeleted({
+                        nodeId,
+                        isDeletingFromItsView: false,
+                      });
+                    }}
+                  />
+                );
+              },
+            }),
+          ]
+        : []),
     ],
     [
       columnHelper,
+      isShared,
       openDeleteModal,
       openNodeModal,
       setEditedNode,
