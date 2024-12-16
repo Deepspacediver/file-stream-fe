@@ -28,7 +28,7 @@ type FolderTableProps = {
   setEditedNode: Dispatch<SetStateAction<EditNodeCell | null>>;
   openDeleteModal: () => void;
   openNodeModal: () => void;
-  isShared?: boolean;
+  hash?: string;
 };
 
 export default function FolderTable({
@@ -37,7 +37,7 @@ export default function FolderTable({
   openNodeModal,
   setNodeToBeDeleted,
   setEditedNode,
-  isShared,
+  hash,
 }: FolderTableProps) {
   const navigate = useNavigate();
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -79,7 +79,7 @@ export default function FolderTable({
           return <CopyText text={cellData ?? folderLink} />;
         },
       }),
-      ...(!isShared
+      ...(!hash
         ? [
             columnHelper.display({
               id: "Edit",
@@ -108,7 +108,7 @@ export default function FolderTable({
             }),
           ]
         : []),
-      ...(!isShared
+      ...(!hash
         ? [
             columnHelper.display({
               id: "Delete",
@@ -138,7 +138,7 @@ export default function FolderTable({
     ],
     [
       columnHelper,
-      isShared,
+      hash,
       openDeleteModal,
       openNodeModal,
       setEditedNode,
@@ -206,7 +206,11 @@ export default function FolderTable({
                 )}
                 onClick={() => {
                   if (row.original.type === NodeTypes.FOLDER) {
-                    navigate(`/folders/${row.original.nodeId}`);
+                    navigate(
+                      !hash
+                        ? `/folders/${row.original.nodeId}`
+                        : `/shared/${hash}/${row.original.nodeId}`
+                    );
                     return;
                   }
                   const fileLink = row.original.fileLink;

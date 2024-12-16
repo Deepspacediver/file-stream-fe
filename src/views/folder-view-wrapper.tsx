@@ -29,7 +29,7 @@ export default function FolderViewWrapper() {
 
   return (
     <FolderView
-      isShared={!!hash}
+      hash={hash}
       folderWithContent={sharedFolderContent ?? folderWithContent}
     />
   );

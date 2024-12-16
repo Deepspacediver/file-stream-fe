@@ -17,16 +17,17 @@ import ShareModal from "@/components/share-modal";
 
 type FolderViewProps = {
   folderWithContent?: FolderContentResponse;
-  isShared?: boolean;
+  hash?: string;
 };
 
 export default function FolderView({
   folderWithContent,
-  isShared,
+  hash,
 }: FolderViewProps) {
   const [editedNode, setEditedNode] = useState<EditNodeCell | null>(null);
   const [nodeToBeDeleted, setNodeToBeDeleted] = useState<NodeToBeDeleted>(null);
   const { folderId } = useParams();
+  const isShared = !!hash;
   const nodeId = folderId ? +folderId : folderWithContent?.nodeId ?? null;
 
   const nodeModalRef = useRef<HTMLDialogElement>(null);
@@ -60,7 +61,6 @@ export default function FolderView({
     <div className="p-2 my-3">
       {!isShared && (
         <>
-          {" "}
           <DeleteNodeModal
             key={"delete-node-modal"}
             closeModal={closeDeleteModal}
@@ -122,7 +122,7 @@ export default function FolderView({
       </div>
       {folderWithContent?.content.length && nodeId ? (
         <FolderTable
-          isShared={isShared}
+          hash={hash}
           setEditedNode={setEditedNode}
           openNodeModal={openNodeModal}
           setNodeToBeDeleted={setNodeToBeDeleted}
