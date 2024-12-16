@@ -39,7 +39,7 @@ export type FolderTree = Pick<
 export type FolderOption = { id: number; name: string };
 
 export type FolderContentRequest = {
-  userId: number | null;
+  userId?: number | null;
   nodeId: number | null;
 };
 
