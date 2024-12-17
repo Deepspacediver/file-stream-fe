@@ -2,6 +2,7 @@ import axiosClient from "@/lib/axios-client";
 import {
   FolderContentResponse,
   FolderTree,
+  GetSharedFolderContentRequest,
   ShareNodeRequest,
   ShareNodeResponse,
 } from "@/types/node-types";
@@ -33,9 +34,13 @@ export const getSharedFolderTree = async (linkHash: string) => {
   return data;
 };
 
-export const getSharedFolderWithContent = async (linkHash: string) => {
+export const getSharedFolderWithContent = async ({
+  linkHash,
+  nodeId,
+}: GetSharedFolderContentRequest) => {
   const { data } = await axiosClient.get<FolderContentResponse>(
-    `${SharedNodesRoutes.SHARED}/${linkHash}`
+    `${SharedNodesRoutes.SHARED}/${linkHash}`,
+    { params: { nodeId } }
   );
   return data;
 };

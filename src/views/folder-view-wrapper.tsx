@@ -13,9 +13,11 @@ export default function FolderViewWrapper() {
 
   const { user } = useContext(UserContext);
   const userId = user?.userId;
-
   const { sharedFolderContent, isLoading: isSharedFolderContentLoading } =
-    useGetSharedFolderWithContent(hash, !!sharedNodeId || !!nodeId);
+    useGetSharedFolderWithContent(
+      { linkHash: hash, nodeId: sharedNodeId },
+      !!nodeId
+    );
 
   const { folderWithContent, isLoading: isUserFolderContentLoading } =
     useGetFolderContent({

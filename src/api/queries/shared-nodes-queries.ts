@@ -4,6 +4,7 @@ import {
   getSharedFolderTree,
   getSharedFolderWithContent,
 } from "../services/shared-nodes-services";
+import { GetSharedFolderContentRequest } from "@/types/node-types";
 
 const SHARED_NODE_KEY = "shared_node";
 const SHARED_NODE_TREE_KEY = "shared_node_tree";
@@ -23,13 +24,13 @@ export const useCreateSharedNode = () => {
 };
 
 export const useGetSharedFolderWithContent = (
-  linkHash?: string,
+  { linkHash, nodeId }: GetSharedFolderContentRequest,
   isDisabled?: boolean
 ) => {
   const { data: sharedFolderContent, isLoading } = useQuery({
     enabled: !!linkHash && !isDisabled,
-    queryFn: () => getSharedFolderWithContent(linkHash!),
-    queryKey: [SHARED_NODE_KEY],
+    queryFn: () => getSharedFolderWithContent({ linkHash, nodeId }),
+    queryKey: [SHARED_NODE_KEY, linkHash, nodeId],
   });
 
   return {
