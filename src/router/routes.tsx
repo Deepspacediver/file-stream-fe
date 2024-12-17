@@ -3,8 +3,8 @@ import Layout from "@/views/layout";
 import LoginPage from "@/pages/login-page";
 import RegisterPage from "@/pages/register-page";
 import { ReactElement } from "react";
-import FolderView from "@/views/folder-view";
 import ProtectedRoute from "@/components/protected-route";
+import FolderViewWrapper from "@/views/folder-view-wrapper";
 
 type Route = {
   path: string;
@@ -28,7 +28,15 @@ export const routes: Route[] = [
       },
       {
         path: "/folders/:folderId",
-        element: <ProtectedRoute component={<FolderView />} />,
+        element: <ProtectedRoute component={<FolderViewWrapper />} />,
+      },
+      {
+        path: "/shared/:hash",
+        element: <FolderViewWrapper />,
+      },
+      {
+        path: "/shared/:hash/:sharedFolderId",
+        element: <FolderViewWrapper />,
       },
     ],
   },

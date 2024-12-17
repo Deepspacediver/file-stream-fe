@@ -1,26 +1,34 @@
-import { useGetFolderContent } from "@/api/queries/users-queries";
 import FolderTable from "@/components/folder-table";
-import Loader from "@/components/loader";
-import { UserContext } from "@/contexts/user-context";
-import { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import TrashBin from "@/assets/icons/trash-can.svg?react";
 import EditPen from "@/assets/icons/edit-pen.svg?react";
 import ShareIcon from "@/assets/icons/share-icon.svg?react";
 import DeleteNodeModal from "@/components/delete-node-modal";
 import CreateNodeModal from "@/components/create-node-modal";
-import { EditNodeCell, NodeToBeDeleted, NodeTypes } from "@/types/node-types";
+import {
+  EditNodeCell,
+  FolderContentResponse,
+  NodeToBeDeleted,
+  NodeTypes,
+} from "@/types/node-types";
 import useDialog from "@/hooks/use-dialog";
 import ShareModal from "@/components/share-modal";
 
-export default function FolderView() {
+type FolderViewProps = {
+  folderWithContent?: FolderContentResponse;
+  hash?: string;
+};
+
+export default function FolderView({
+  folderWithContent,
+  hash,
+}: FolderViewProps) {
   const [editedNode, setEditedNode] = useState<EditNodeCell | null>(null);
   const [nodeToBeDeleted, setNodeToBeDeleted] = useState<NodeToBeDeleted>(null);
-  const params = useParams();
-  const { folderId } = params;
-  const { user } = useContext(UserContext);
-  const userId = user ? +user.userId : null;
-  const nodeId = folderId ? +folderId : null;
+  const { folderId } = useParams();
+  const isShared = !!hash;
+  const nodeId = folderId ? +folderId : folderWithContent?.nodeId ?? null;
 
   const nodeModalRef = useRef<HTMLDialogElement>(null);
   const deleteModalRef = useRef<HTMLDialogElement>(null);
@@ -38,11 +46,6 @@ export default function FolderView() {
     dialogRef: shareModalRef,
   });
 
-  const { folderWithContent, isLoading } = useGetFolderContent({
-    userId,
-    nodeId,
-  });
-
   const currentFolder: EditNodeCell | null =
     nodeId && folderWithContent && !!folderWithContent.parentNodeId
       ? {
@@ -53,30 +56,30 @@ export default function FolderView() {
         }
       : null;
 
-  if (isLoading) {
-    return <Loader isCentered />;
-  }
   const iconStyles = "min-w-6 min-h-6 h-6 w-6 cursor-pointer";
-
   return (
     <div className="p-2 my-3">
-      <DeleteNodeModal
-        key={"delete-node-modal"}
-        closeModal={closeDeleteModal}
-        ref={deleteModalRef}
-        nodeToBeDeleted={nodeToBeDeleted}
-        onClose={() => setNodeToBeDeleted(null)}
-      />
-      <CreateNodeModal
-        key={"create-node-modal"}
-        editedNode={editedNode}
-        ref={nodeModalRef}
-        closeModal={closeNodeModal}
-        onClose={() => {
-          setEditedNode(null);
-        }}
-      />
-      {nodeId && (
+      {!isShared && (
+        <>
+          <DeleteNodeModal
+            key={"delete-node-modal"}
+            closeModal={closeDeleteModal}
+            ref={deleteModalRef}
+            nodeToBeDeleted={nodeToBeDeleted}
+            onClose={() => setNodeToBeDeleted(null)}
+          />
+          <CreateNodeModal
+            key={"create-node-modal"}
+            editedNode={editedNode}
+            ref={nodeModalRef}
+            closeModal={closeNodeModal}
+            onClose={() => {
+              setEditedNode(null);
+            }}
+          />
+        </>
+      )}
+      {nodeId && !isShared && (
         <ShareModal
           closeModal={closeShareModal}
           nodeId={nodeId}
@@ -86,7 +89,7 @@ export default function FolderView() {
       <div className="flex items-center gap-4">
         <h2 className="text-3xl font-medium">{folderWithContent?.name}</h2>
         <div className="flex gap-2">
-          {currentFolder && (
+          {currentFolder && !isShared && (
             <>
               <EditPen
                 className={iconStyles}
@@ -107,16 +110,19 @@ export default function FolderView() {
               />
             </>
           )}
-          <ShareIcon
-            className={iconStyles}
-            onClick={() => {
-              openShareModal();
-            }}
-          />
+          {!isShared && (
+            <ShareIcon
+              className={iconStyles}
+              onClick={() => {
+                openShareModal();
+              }}
+            />
+          )}
         </div>
       </div>
       {folderWithContent?.content.length && nodeId ? (
         <FolderTable
+          hash={hash}
           setEditedNode={setEditedNode}
           openNodeModal={openNodeModal}
           setNodeToBeDeleted={setNodeToBeDeleted}

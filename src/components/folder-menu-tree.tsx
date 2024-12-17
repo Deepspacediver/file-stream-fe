@@ -7,19 +7,23 @@ import { twMerge } from "tailwind-merge";
 import { useNavigate, useParams } from "react-router-dom";
 type FolderMenuItemProps = {
   folder: FolderTree;
+  hash?: string;
 };
 
-export default function FolderMenuTree({ folder }: FolderMenuItemProps) {
+export default function FolderMenuTree({ folder, hash }: FolderMenuItemProps) {
   const [areChildrenOpen, setAreChildrenOpen] = useState(false);
-  const { folderId: activeFolderId } = useParams();
+  const { folderId: activeFolderId, sharedFolderId } = useParams();
   const activeNodeId = activeFolderId ? +activeFolderId : null;
+  const activeSharedNodeId = sharedFolderId ? +sharedFolderId : null;
 
   const toggleChildrenOpen = () => {
     setAreChildrenOpen((prevState) => !prevState);
   };
 
   const folderId = folder.nodeId;
-  const isFolderChosen = folderId === activeNodeId;
+  const isFolderChosen = !hash
+    ? folderId === activeNodeId
+    : folderId === activeSharedNodeId;
   const navigate = useNavigate();
 
   return (
@@ -34,7 +38,9 @@ export default function FolderMenuTree({ folder }: FolderMenuItemProps) {
         <span
           className="flex items-center gap-1 select-none"
           onClick={() => {
-            navigate(`/folders/${folderId}`, { replace: true });
+            navigate(
+              !hash ? `/folders/${folderId}` : `/shared/${hash}/${folderId}`
+            );
           }}
         >
           <FolderIcon className="w-8 h-8" />
@@ -60,7 +66,11 @@ export default function FolderMenuTree({ folder }: FolderMenuItemProps) {
           <div className="overflow-hidden  pl-4">
             {folder.children.map((subFolder) => {
               return (
-                <FolderMenuTree key={subFolder.nodeId} folder={subFolder} />
+                <FolderMenuTree
+                  key={subFolder.nodeId}
+                  folder={subFolder}
+                  hash={hash}
+                />
               );
             })}
           </div>

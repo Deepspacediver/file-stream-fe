@@ -28,6 +28,7 @@ type FolderTableProps = {
   setEditedNode: Dispatch<SetStateAction<EditNodeCell | null>>;
   openDeleteModal: () => void;
   openNodeModal: () => void;
+  hash?: string;
 };
 
 export default function FolderTable({
@@ -36,6 +37,7 @@ export default function FolderTable({
   openNodeModal,
   setNodeToBeDeleted,
   setEditedNode,
+  hash,
 }: FolderTableProps) {
   const navigate = useNavigate();
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -72,59 +74,73 @@ export default function FolderTable({
         header: "Link",
         enableSorting: false,
         cell: ({ row, getValue }) => {
-          const cellData = getValue();
-          const folderLink = `${location.host}/folders/${row.original.nodeId}`;
-          return <CopyText text={cellData ?? folderLink} />;
+          const fileLink = getValue();
+          const folderLink = !hash
+            ? `${location.host}/folders/${row.original.nodeId}`
+            : `${location.host}/shared/${hash}/${row.original.nodeId}`;
+          return <CopyText text={fileLink ?? folderLink} />;
         },
       }),
-      columnHelper.display({
-        id: "Edit",
-        header: "Edit",
-        enableResizing: false,
-        maxSize: 20,
-        cell: (cell) => {
-          const data = cell.row.original;
-          const cellNode = {
-            nodeId: data.nodeId,
-            name: data.name,
-            type: data.type,
-            parentNodeId: data.parentNodeId,
-          };
-          return (
-            <EditPen
-              className="min-w-6 min-h-6 h-6 w-6 mx-auto"
-              onClick={(e) => {
-                e.stopPropagation();
-                setEditedNode(cellNode);
-                openNodeModal();
-              }}
-            />
-          );
-        },
-      }),
-      columnHelper.display({
-        id: "Delete",
-        header: "Delete",
-        enableResizing: false,
-        maxSize: 20,
-        cell: (cell) => {
-          const data = cell.row.original;
-          const nodeId = data.nodeId;
-          return (
-            <TrashBin
-              className="min-w-6 min-h-6 h-6 w-6 mx-auto"
-              onClick={(e) => {
-                e.stopPropagation();
-                openDeleteModal();
-                setNodeToBeDeleted({ nodeId, isDeletingFromItsView: false });
-              }}
-            />
-          );
-        },
-      }),
+      ...(!hash
+        ? [
+            columnHelper.display({
+              id: "Edit",
+              header: "Edit",
+              enableResizing: false,
+              maxSize: 20,
+              cell: (cell) => {
+                const data = cell.row.original;
+                const cellNode = {
+                  nodeId: data.nodeId,
+                  name: data.name,
+                  type: data.type,
+                  parentNodeId: data.parentNodeId,
+                };
+                return (
+                  <EditPen
+                    className="min-w-6 min-h-6 h-6 w-6 mx-auto"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditedNode(cellNode);
+                      openNodeModal();
+                    }}
+                  />
+                );
+              },
+            }),
+          ]
+        : []),
+      ...(!hash
+        ? [
+            columnHelper.display({
+              id: "Delete",
+              header: "Delete",
+              enableResizing: false,
+              maxSize: 20,
+              cell: (cell) => {
+                const data = cell.row.original;
+                const nodeId = data.nodeId;
+                return (
+                  <TrashBin
+                    className="min-w-6 min-h-6 h-6 w-6 mx-auto"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDeleteModal();
+                      setNodeToBeDeleted({
+                        nodeId,
+                        isDeletingFromItsView: false,
+                      });
+                    }}
+                  />
+                );
+              },
+            }),
+          ]
+        : []),
     ],
     [
       columnHelper,
+      hash,
       openDeleteModal,
       openNodeModal,
       setEditedNode,
@@ -192,7 +208,11 @@ export default function FolderTable({
                 )}
                 onClick={() => {
                   if (row.original.type === NodeTypes.FOLDER) {
-                    navigate(`/folders/${row.original.nodeId}`);
+                    navigate(
+                      !hash
+                        ? `/folders/${row.original.nodeId}`
+                        : `/shared/${hash}/${row.original.nodeId}`
+                    );
                     return;
                   }
                   const fileLink = row.original.fileLink;
