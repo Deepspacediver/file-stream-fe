@@ -30,12 +30,14 @@ type FolderFormProps = {
   folderOptions: FolderOption[];
   defaultFolderOption: FolderOption | null;
   editedNode?: EditNodeCell | null;
+  onSuccessfulMutation?: () => void;
 };
 
 export default function FolderForm({
   folderOptions,
   defaultFolderOption,
   editedNode,
+  onSuccessfulMutation,
 }: FolderFormProps) {
   const {
     register,
@@ -54,8 +56,11 @@ export default function FolderForm({
   });
   const { user } = useContext(UserContext);
   const userId = user!.userId;
-  const { createNewFolder, isLoading } = useCreateFolder(userId);
-  const { updateNodeData } = useUpdateNode(userId);
+  const { createNewFolder, isLoading } = useCreateFolder(
+    userId,
+    onSuccessfulMutation
+  );
+  const { updateNodeData } = useUpdateNode(userId, onSuccessfulMutation);
 
   const isEditMode = !!editedNode;
 
