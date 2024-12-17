@@ -8,8 +8,7 @@ const queryClient = new QueryClient({
       onError: (data) => {
         if (data instanceof AxiosError) {
           const errorMessage = data?.response?.data.error;
-          showToast(errorMessage ?? data.message, "error");
-          return;
+          return showToast(errorMessage ?? data.message, "error");
         }
         return showToast(data.message, "error");
       },
