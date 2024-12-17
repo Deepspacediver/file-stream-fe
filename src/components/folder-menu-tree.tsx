@@ -12,15 +12,18 @@ type FolderMenuItemProps = {
 
 export default function FolderMenuTree({ folder, hash }: FolderMenuItemProps) {
   const [areChildrenOpen, setAreChildrenOpen] = useState(false);
-  const { folderId: activeFolderId } = useParams();
+  const { folderId: activeFolderId, sharedFolderId } = useParams();
   const activeNodeId = activeFolderId ? +activeFolderId : null;
+  const activeSharedNodeId = sharedFolderId ? +sharedFolderId : null;
 
   const toggleChildrenOpen = () => {
     setAreChildrenOpen((prevState) => !prevState);
   };
 
   const folderId = folder.nodeId;
-  const isFolderChosen = folderId === activeNodeId;
+  const isFolderChosen = !hash
+    ? folderId === activeNodeId
+    : folderId === activeSharedNodeId;
   const navigate = useNavigate();
 
   return (
