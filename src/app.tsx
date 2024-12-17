@@ -13,7 +13,7 @@ import Loader from "./components/loader";
 const router = createBrowserRouter(routes);
 
 export default function App() {
-  //User falsy states :undefied - initial state | null - set manually
+  //User falsy states : undefied - initial state | null - set manually
   const [user, setUser] = useState<UserWithoutPassword | null | undefined>();
   const { user: userResponse, isLoading } = useGetLoggedUserData(
     !getIsLogged()
