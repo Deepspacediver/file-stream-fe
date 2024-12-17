@@ -81,3 +81,8 @@ export type NodeToBeDeleted = {
   nodeId: number;
   isDeletingFromItsView: boolean;
 } | null;
+
+export type GetSharedFolderContentRequest = {
+  linkHash?: string;
+  nodeId: number | null;
+};
