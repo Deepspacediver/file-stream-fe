@@ -74,9 +74,11 @@ export default function FolderTable({
         header: "Link",
         enableSorting: false,
         cell: ({ row, getValue }) => {
-          const cellData = getValue();
-          const folderLink = `${location.host}/folders/${row.original.nodeId}`;
-          return <CopyText text={cellData ?? folderLink} />;
+          const fileLink = getValue();
+          const folderLink = !hash
+            ? `${location.host}/folders/${row.original.nodeId}`
+            : `${location.host}/shared/${hash}/${row.original.nodeId}`;
+          return <CopyText text={fileLink ?? folderLink} />;
         },
       }),
       ...(!hash
