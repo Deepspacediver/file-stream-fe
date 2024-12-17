@@ -93,17 +93,19 @@ const ShareModal = forwardRef<HTMLDialogElement, ShareModalProps>(
         onClose={onModalClose}
         ref={ref}
       >
-        <div>
+        <div className="flex flex-col">
           {response && isSuccess && (
             <>
               <h3 className="text-2xl font-medium mb-4">
                 Your shareable folder link has been generated
               </h3>
-              <CopyText
-                copyText="Copy link"
-                copyClassName="text-xl cursor-pointer"
-                text={response.link}
-              />
+              <Button className="mx-auto">
+                <CopyText
+                  copyText="Copy link"
+                  copyClassName="text-xl cursor-pointer no-underline"
+                  text={response.link}
+                />
+              </Button>
             </>
           )}
           {!response && !isSuccess && (
