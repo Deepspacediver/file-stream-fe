@@ -15,6 +15,7 @@ import { useContext } from "react";
 import { UserContext } from "@/contexts/user-context";
 import { FolderContentRequest, NodeTypes } from "@/types/node-types";
 import showToast from "@/lib/show-toast";
+import { AxiosError } from "axios";
 
 const BASE_KEY = "users";
 const NODE_KEY = "nodes";
@@ -59,6 +60,11 @@ export const useCreateFolder = (userId: number, callback?: () => void) => {
       }
       showToast("Folder successfully created");
     },
+    onError: () => {
+      if (callback) {
+        callback();
+      }
+    },
   });
 
   return { createNewFolder, isLoading };
@@ -77,6 +83,16 @@ export const useCreateFile = (userId: number, callback?: () => void) => {
       }
       showToast("File  successfully created");
     },
+    onError: (err) => {
+      if (callback) {
+        callback();
+      }
+      if (err instanceof AxiosError) {
+        const errorMessage = err?.response?.data.error;
+        return showToast(errorMessage, "error");
+      }
+      return showToast(err.message, "error");
+    },
   });
 
   return {
@@ -93,11 +109,22 @@ export const useUpdateNode = (userId: number, callback?: () => void) => {
       queryClient.invalidateQueries({
         queryKey: [NODE_KEY, userId],
       });
+
+      const isFile = data.type === NodeTypes.FILE;
+      showToast(`${isFile ? "File" : "Folder"} successfully updated`);
       if (callback) {
         callback();
       }
-      const isFile = data.type === NodeTypes.FILE;
-      showToast(`${isFile ? "File" : "Folder"} successfully updated`);
+    },
+    onError: (err) => {
+      if (callback) {
+        callback();
+      }
+      if (err instanceof AxiosError) {
+        const errorMessage = err?.response?.data.error;
+        return showToast(errorMessage, "error");
+      }
+      return showToast(err.message, "error");
     },
   });
 

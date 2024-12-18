@@ -34,14 +34,14 @@ type FileFormProps = {
   folderOptions: FolderOption[];
   defaultFolderOption: FolderOption | null;
   editedNode?: EditNodeCell | null;
-  onSuccessfulMutation?: () => void;
+  onMutation?: () => void;
 };
 
 export default function FileForm({
   folderOptions,
   defaultFolderOption,
   editedNode,
-  onSuccessfulMutation,
+  onMutation,
 }: FileFormProps) {
   const {
     register,
@@ -60,15 +60,8 @@ export default function FileForm({
   });
   const { user } = useContext(UserContext);
   const userId = user!.userId;
-  const { createNewFile, isLoading } = useCreateFile(
-    userId,
-    onSuccessfulMutation
-  );
-  const { updateNodeData } = useUpdateNode(
-    userId,
-
-    onSuccessfulMutation
-  );
+  const { createNewFile, isLoading } = useCreateFile(userId, onMutation);
+  const { updateNodeData } = useUpdateNode(userId, onMutation);
 
   const onSubmit = (data: FileFormFields, e?: BaseSyntheticEvent) => {
     e?.preventDefault();
