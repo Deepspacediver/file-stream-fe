@@ -75,6 +75,7 @@ export default function FolderView({
             closeModal={closeNodeModal}
             onClose={() => {
               setEditedNode(null);
+              closeNodeModal();
             }}
           />
         </>

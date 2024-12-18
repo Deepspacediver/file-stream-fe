@@ -13,7 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { setIsLogged } from "@/helpers/local-storage-helpers";
 import { useContext } from "react";
 import { UserContext } from "@/contexts/user-context";
-import { FolderContentRequest } from "@/types/node-types";
+import { FolderContentRequest, NodeTypes } from "@/types/node-types";
+import showToast from "@/lib/show-toast";
 
 const BASE_KEY = "users";
 const NODE_KEY = "nodes";
@@ -47,19 +48,23 @@ export const useGetUserFolders = (userId?: number) => {
   return { folders, isLoading };
 };
 
-export const useCreateFolder = (userId: number) => {
+export const useCreateFolder = (userId: number, callback?: () => void) => {
   const queryClient = useQueryClient();
   const { mutate: createNewFolder, isPending: isLoading } = useMutation({
     mutationFn: createFolder,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [NODE_KEY, userId] });
+      if (callback) {
+        callback();
+      }
+      showToast("Folder successfully created");
     },
   });
 
   return { createNewFolder, isLoading };
 };
 
-export const useCreateFile = (userId: number) => {
+export const useCreateFile = (userId: number, callback?: () => void) => {
   const queryClient = useQueryClient();
   const { mutate: createNewFile, isPending: isLoading } = useMutation({
     mutationFn: createFile,
@@ -67,6 +72,10 @@ export const useCreateFile = (userId: number) => {
       queryClient.invalidateQueries({
         queryKey: [NODE_KEY, userId, FOLDER_CONTENT],
       });
+      if (callback) {
+        callback();
+      }
+      showToast("File  successfully created");
     },
   });
 
@@ -76,14 +85,19 @@ export const useCreateFile = (userId: number) => {
   };
 };
 
-export const useUpdateNode = (userId: number) => {
+export const useUpdateNode = (userId: number, callback?: () => void) => {
   const queryClient = useQueryClient();
   const { mutate: updateNodeData, isPending: isLoading } = useMutation({
     mutationFn: updateNode,
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: [NODE_KEY, userId],
       });
+      if (callback) {
+        callback();
+      }
+      const isFile = data.type === NodeTypes.FILE;
+      showToast(`${isFile ? "File" : "Folder"} successfully updated`);
     },
   });
 

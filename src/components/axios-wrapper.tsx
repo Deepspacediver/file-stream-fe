@@ -13,6 +13,7 @@ export default function AxiosWrapper({ children }: { children: ReactNode }) {
         setUser(null);
         clearIsLogged();
       }
+      return Promise.reject(error);
     }
   );
 

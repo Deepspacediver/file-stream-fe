@@ -63,6 +63,7 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
                 editedNode={editedNode}
                 folderOptions={folderOptions}
                 defaultFolderOption={defaultFolderOption}
+                onSuccessfulMutation={closeModal}
               />
             )
           : !isLoading && (
@@ -70,6 +71,7 @@ const CreateNodeModal = forwardRef<HTMLDialogElement, CreateNodeModalProps>(
                 editedNode={editedNode}
                 folderOptions={folderOptions}
                 defaultFolderOption={defaultFolderOption}
+                onSuccessfulMutation={closeModal}
               />
             )}
       </Modal>
