@@ -28,7 +28,10 @@ const DeleteNodeModal = forwardRef<HTMLDialogElement, DeleteNodeModalProps>(
       }
       closeModal();
     };
-    const { removeNode } = useDeleteNode(userId, onSuccessfulDeletion);
+    const { removeNode, isLoading } = useDeleteNode(
+      userId,
+      onSuccessfulDeletion
+    );
     return (
       <Modal
         id="delete-node-modal"
@@ -42,6 +45,7 @@ const DeleteNodeModal = forwardRef<HTMLDialogElement, DeleteNodeModalProps>(
               Are you sure you want to delete this resource?
             </h3>
             <Button
+              isLoading={isLoading}
               variant={ButtonVariants.SUBMIT}
               onClick={() => {
                 if (userId) {
